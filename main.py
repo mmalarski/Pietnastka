@@ -2,6 +2,7 @@ DEPTH = 20
 TARGET_STATE = [[1, 2, 3, 4], [5, 6, 7, 8], [9, 10, 11, 12], [13, 14, 15, 0]]
 INITIAL_STATE = []
 
+
 class Step:
 
     def __init__(self, parent, previous_move, all_moves, board):
@@ -43,8 +44,8 @@ def find_zero(board):
     for row in range(len(board)):
         for column in range(len(board[row])):
             if board[row][column] == 0:
-              x = row
-              y = column
+                x = row
+                y = column
     return x, y
 
 
