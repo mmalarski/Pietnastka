@@ -1,16 +1,22 @@
-# This is a sample Python script.
+DEPTH = 20
 
-# Press Shift+F10 to execute it or replace it with your code.
-# Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
+class Step:
+
+    def __init__(self, parent, previous_move, all_moves, board):
+        self.parent = parent
+        self.previous_move = previous_move
+        self.all_moves = all_moves
+        self.board = board
+
+    def move_step(self, move, board_state):
 
 
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press Ctrl+F8 to toggle the breakpoint.
 
 
-# Press the green button in the gutter to run the script.
+
+
 if __name__ == '__main__':
     print_hi('PyCharm')
 
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
+
+
