@@ -101,12 +101,10 @@ def dfs():
                     if posdirs[0] in closed_list:
                         posdirs.pop()
                         if len(posdirs) == 0:
-                            open_list.remove(step)
-                            closed_list.append(step)
-                            step = step.parent
+                            return -1
                     else:
-
-
+                        step.move_step(posdirs[0], state.board, zero_pos_x, zero_pos_y)
+                        open_list.append(step)
 
 
 def a_star():
