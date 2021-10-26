@@ -9,8 +9,34 @@ class Step:
         self.previous_move = previous_move
         self.all_moves = all_moves
         self.board = board
+        self.all_moves.append(previous_move)
 
-    # def move_step(self, move, board_state):
+    def create_next_step(self, move, new_board):
+        next_step = Step(self, move, self.all_moves, new_board)
+
+    def move_step(self, move, board_state, x, y):
+        new_arr = board_state
+        if move == 'U':
+            new_arr[x - 1][y] = row[x][y]
+            new_arr[x][y] = row[x-1][y]
+            self.create_next_step(move, new_arr)
+            x = x - 1
+        elif move == 'D':
+            new_arr[x + 1][y] = row[x][y]
+            new_arr[x][y] = row[x + 1][y]
+            self.create_next_step(move, new_arr)
+            x = x + 1
+        elif move == 'R':
+            new_arr[x][y + 1] = row[x][y]
+            new_arr[x][y] = row[x][y + 1]
+            self.create_next_step(move, new_arr)
+            y = y + 1
+        elif move == 'L':
+            new_arr[x][y - 1] = row[x][y]
+            new_arr[x][y] = row[x][y - 1]
+            self.create_next_step(move, new_arr)
+            y = y - 1
+        return x, y
 
 
 def find_zero(board):
