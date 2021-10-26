@@ -1,4 +1,6 @@
 DEPTH = 20
+TARGET_STATE = [[1, 2, 3, 4], [5, 6, 7, 8], [9, 10, 11, 12], [13, 14, 15, 0]]
+INITIAL_STATE = []
 
 class Step:
 
@@ -11,15 +13,30 @@ class Step:
     # def move_step(self, move, board_state):
 
 
+def find_zero(board):
+    for row in range(len(board)):
+        for column in range(len(board[row])):
+            if board[row][column] == 0:
+              x = row
+              y = column
+    return x, y
+
+
 def bfs():
     print("bfs")
 
 
 def dfs():
     print("dfs")
+    step = Step(None, None, [], INITIAL_STATE)
+    open_list = []
+    closed_list = {}
+    while step.board != TARGET_STATE:
+        print("hi")
+
 
 def a_star():
-    print('A*');
+    print('A*')
 
 
 
