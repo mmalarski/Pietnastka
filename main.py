@@ -31,6 +31,7 @@ def dfs():
     step = Step(None, None, [], INITIAL_STATE)
     open_list = []
     closed_list = {}
+    zero_pos_x, zero_pos_y = find_zero(INITIAL_STATE)
     while step.board != TARGET_STATE:
         print("hi")
 
