@@ -64,11 +64,49 @@ def bfs():
 def dfs():
     print("dfs")
     step = Step(None, None, [], INITIAL_STATE)
-    open_list = []
+    open_list = [step]
     closed_list = {}
     zero_pos_x, zero_pos_y = find_zero(INITIAL_STATE)
     while step.board != TARGET_STATE:
-        print("hi")
+        posdirs = getPossibleDirections(step.board)
+        if posdirs[0] not in open_list:  # child is not on open list
+            if posdirs[0] not in closed_list:  # child is not on closed list
+                step.move_step(posdirs[0], state.board, zero_pos_x, zero_pos_y)
+                open_list.append(step)
+            else:  # child is on closed list
+                posdirs.pop(0)
+                for i in posdirs:
+                    if posdirs[0] in closed_list:
+                        posdirs.pop()
+                        if len(posdirs) == 0:
+                            open_list.remove(step)
+                            closed_list.append(step)
+                            step = step.parent
+                    else:
+                        break
+                step.move_step(posdirs[0], state.board, zero_pos_x, zero_pos_y)
+                open_list.append(step)
+        else:  # parent is on the open list
+            copystep = deepcopy(step)
+            temp_x = deepcopy(zero_pos_x)
+            temp_y = deepcopy(zero_pos_y)
+            copystep.move_step(posdirs[0], copystep.board, temp_x, temp_y)
+            if copystep != step.parent:
+                open_list.remove(step)
+                closed_list.append(step)
+                step = step.parent
+            else:
+                posdirs.pop(0)
+                for i in posdirs:
+                    if posdirs[0] in closed_list:
+                        posdirs.pop()
+                        if len(posdirs) == 0:
+                            open_list.remove(step)
+                            closed_list.append(step)
+                            step = step.parent
+                    else:
+
+
 
 
 def a_star():
@@ -142,4 +180,3 @@ if __name__ == '__main__':
     step_e = Step(None, None, moves, EXPERIMENTAL_STATE)
 
     print(getPossibleDirections(step_e.board, "LRDU"))
-
