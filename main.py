@@ -6,10 +6,10 @@ TARGET_STATE = [[1, 2, 3, 4],
                 [9, 10, 11, 12],
                 [13, 14, 15, 0]]
 INITIAL_STATE = []
-EXPERIMENTAL_STATE = [[1, 2, 3, 4],
-                      [5, 6, 7, 8],
-                      [9, 10, 0, 12],
-                      [13, 14, 11, 15]]
+EXPERIMENTAL_STATE = [[4, 8, 3, 15],
+                      [5, 6, 0, 11],
+                      [2, 9, 10, 12],
+                      [1, 14, 7, 13]]
 
 
 class Step:
@@ -82,7 +82,7 @@ def print_board(board):
 
 
 def createNeighborStates(step):
-    x, y = find_zero(step.board)
+    row, col = find_zero(step.board)
     size_x, size_y = len(step.board[0]), len(step.board)
 
     step_U = deepcopy(step.board)
@@ -92,64 +92,73 @@ def createNeighborStates(step):
 
     # CORNERS
     # top left corner
-    if x == 0 and y == 0:
-        step_R[x][y], step_R[x + 1][y] = step_R[x + 1][y], step_R[x][y]
-        step_D[x][y], step_D[x][y + 1] = step_D[x][y + 1], step_D[x][y]
+    if row == 0 and col == 0:
+        print("RD")
+        step_R[row][col], step_R[row][col + 1] = step_R[row][col + 1], step_R[row][col]
+        step_D[row][col], step_D[row + 1][col] = step_D[row + 1][col], step_D[row][col]
         return "RD", step_R, step_D
 
     # top right corner
-    elif x == size_x - 1 and y == 0:
-        step_D[x][y], step_D[x][y + 1] = step_D[x][y + 1], step_D[x][y]
-        step_L[x][y], step_L[x - 1][y] = step_L[x - 1][y], step_L[x][y]
+    elif row == 0 and col == size_x - 1:
+        print("DL")
+        step_D[row][col], step_D[row + 1][col] = step_D[row + 1][col], step_D[row][col]
+        step_L[row][col], step_L[row][col - 1] = step_L[row][col - 1], step_L[row][col]
         return "DL", step_D, step_L
 
     # bottom right corner
-    elif x == size_x - 1 and y == size_y - 1:
-        step_L[x][y], step_L[x][y - 1] = step_L[x][y - 1], step_L[x][y]
-        step_U[x][y], step_U[x - 1][y] = step_U[x - 1][y], step_U[x][y]
+    elif row == size_y - 1 and col == size_x - 1:
+        print("LU")
+        step_L[row][col], step_L[row][col - 1] = step_L[row][col - 1], step_L[row][col]
+        step_U[row][col], step_U[row - 1][col] = step_U[row - 1][col], step_U[row][col]
         return "LU", step_L, step_U
 
     # bottom left corner
-    elif x == 0 and y == size_y - 1:
-        step_U[x][y], step_U[x][y - 1] = step_U[x][y - 1], step_U[x][y]
-        step_R[x][y], step_R[x + 1][y] = step_R[x + 1][y], step_R[x][y]
+    elif row == size_y - 1 and col == 0:
+        print("UR")
+        step_U[row][col], step_U[row - 1][col] = step_U[row - 1][col], step_U[row][col]
+        step_R[row][col], step_R[row][col + 1] = step_R[row][col + 1], step_R[row][col]
         return "UR", step_U, step_R
 
     # EDGES
     # top edge
-    elif y == 0:
-        step_R[x][y], step_R[x + 1][y] = step_R[x + 1][y], step_R[x][y]
-        step_D[x][y], step_D[x][y + 1] = step_D[x][y + 1], step_D[x][y]
-        step_L[x][y], step_L[x - 1][y] = step_L[x - 1][y], step_L[x][y]
+    elif row == 0:
+        print("RDL")
+        step_R[row][col], step_R[row][col + 1] = step_R[row][col + 1], step_R[row][col]
+        step_D[row][col], step_D[row + 1][col] = step_D[row + 1][col], step_D[row][col]
+        step_L[row][col], step_L[row][col - 1] = step_L[row][col - 1], step_L[row][col]
         return "RDL", step_R, step_D, step_L
 
     # right edge
-    elif x == size_x - 1:
-        step_D[x][y], step_D[x][y + 1] = step_D[x][y + 1], step_D[x][y]
-        step_L[x][y], step_L[x - 1][y] = step_L[x - 1][y], step_L[x][y]
-        step_U[x][y], step_U[x][y - 1] = step_U[x][y - 1], step_U[x][y]
+    elif col == size_x - 1:
+        print("DLU")
+        step_D[row][col], step_D[row + 1][col] = step_D[row + 1][col], step_D[row][col]
+        step_L[row][col], step_L[row][col - 1] = step_L[row][col - 1], step_L[row][col]
+        step_U[row][col], step_U[row - 1][col] = step_U[row - 1][col], step_U[row][col]
         return "DLU", step_D, step_L, step_U
 
     # bottom edge
-    elif y == size_y - 1:
-        step_L[x][y], step_L[x - 1][y] = step_L[x - 1][y], step_L[x][y]
-        step_U[x][y], step_U[x][y - 1] = step_U[x][y - 1], step_U[x][y]
-        step_R[x][y], step_R[x + 1][y] = step_R[x + 1][y], step_R[x][y]
+    elif row == size_y - 1:
+        print("LUR")
+        step_L[row][col], step_L[row][col - 1] = step_L[row][col - 1], step_L[row][col]
+        step_U[row][col], step_U[row - 1][col] = step_U[row - 1][col], step_U[row][col]
+        step_R[row][col], step_R[row][col + 1] = step_R[row][col + 1], step_R[row][col]
         return "LUR", step_L, step_U, step_R
 
     # left edge
-    elif x == 0:
-        step_U[x][y], step_U[x][y - 1] = step_U[x][y - 1], step_U[x][y]
-        step_R[x][y], step_R[x + 1][y] = step_R[x + 1][y], step_R[x][y]
-        step_D[x][y], step_D[x][y + 1] = step_D[x][y + 1], step_D[x][y]
+    elif col == 0:
+        print("URD")
+        step_U[row][col], step_U[row - 1][col] = step_U[row - 1][col], step_U[row][col]
+        step_R[row][col], step_R[row][col + 1] = step_R[row][col + 1], step_R[row][col]
+        step_D[row][col], step_D[row + 1][col] = step_D[row + 1][col], step_D[row][col]
         return "URD", step_U, step_R, step_D
 
     # MIDDLE
     else:
-        step_U[x][y], step_U[x][y + 1] = step_U[x][y + 1], step_U[x][y]
-        step_R[x][y], step_R[x + 1][y] = step_R[x + 1][y], step_R[x][y]
-        step_D[x][y], step_D[x][y - 1] = step_D[x][y - 1], step_D[x][y]
-        step_L[x][y], step_L[x - 1][y] = step_L[x - 1][y], step_L[x][y]
+        print("URDL")
+        step_U[row][col], step_U[row - 1][col] = step_U[row - 1][col], step_U[row][col]
+        step_R[row][col], step_R[row][col + 1] = step_R[row][col + 1], step_R[row][col]
+        step_D[row][col], step_D[row + 1][col] = step_D[row + 1][col], step_D[row][col]
+        step_L[row][col], step_L[row][col - 1] = step_L[row][col - 1], step_L[row][col]
         return "URDL", step_U, step_R, step_D, step_L
 
 
@@ -158,10 +167,10 @@ if __name__ == '__main__':
     step_t = Step(None, None, moves, TARGET_STATE)
     step_e = Step(None, None, moves, EXPERIMENTAL_STATE)
 
-    print(createNeighborStates(step_t)[0])
-    print_board(createNeighborStates(step_t)[1])
-    print_board(createNeighborStates(step_t)[2])
-    print()
+    # print(createNeighborStates(step_t)[0])
+    # print_board(createNeighborStates(step_t)[1])
+    # print_board(createNeighborStates(step_t)[2])
+    # print()
     print(createNeighborStates(step_e)[0])
     print_board(createNeighborStates(step_e)[1])
     print_board(createNeighborStates(step_e)[2])
