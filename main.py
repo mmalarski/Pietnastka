@@ -8,10 +8,18 @@ class Step:
         self.all_moves = all_moves
         self.board = board
 
-    def move_step(self, move, board_state):
+    # def move_step(self, move, board_state):
 
 
+def bfs():
+    print("bfs")
 
+
+def dfs():
+    print("dfs")
+
+def a_star():
+    print('A*');
 
 
 
