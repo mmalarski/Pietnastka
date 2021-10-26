@@ -6,8 +6,8 @@ TARGET_STATE = [[1, 2, 3, 4],
                 [9, 10, 11, 12],
                 [13, 14, 15, 0]]
 INITIAL_STATE = []
-EXPERIMENTAL_STATE = [[4, 8, 3, 15],
-                      [5, 6, 0, 11],
+EXPERIMENTAL_STATE = [[11, 8, 3, 15],
+                      [5, 6, 4, 0],
                       [2, 9, 10, 12],
                       [1, 14, 7, 13]]
 
@@ -81,85 +81,59 @@ def print_board(board):
     print()
 
 
-def createNeighborStates(step):
-    row, col = find_zero(step.board)
-    size_x, size_y = len(step.board[0]), len(step.board)
-
-    step_U = deepcopy(step.board)
-    step_R = deepcopy(step.board)
-    step_D = deepcopy(step.board)
-    step_L = deepcopy(step.board)
+def getPossibleDirections(board, order):
+    row, col = find_zero(board)
+    size_x, size_y = len(board[0]), len(board)
 
     # CORNERS
     # top left corner
     if row == 0 and col == 0:
-        print("RD")
-        step_R[row][col], step_R[row][col + 1] = step_R[row][col + 1], step_R[row][col]
-        step_D[row][col], step_D[row + 1][col] = step_D[row + 1][col], step_D[row][col]
-        return "RD", step_R, step_D
+        result = order.replace("U", '')
+        result = result.replace("L", '')
+        return result[0], result[1]
 
     # top right corner
     elif row == 0 and col == size_x - 1:
-        print("DL")
-        step_D[row][col], step_D[row + 1][col] = step_D[row + 1][col], step_D[row][col]
-        step_L[row][col], step_L[row][col - 1] = step_L[row][col - 1], step_L[row][col]
-        return "DL", step_D, step_L
+        result = order.replace("U", '')
+        result = result.replace("R", '')
+        return result[0], result[1]
 
     # bottom right corner
     elif row == size_y - 1 and col == size_x - 1:
-        print("LU")
-        step_L[row][col], step_L[row][col - 1] = step_L[row][col - 1], step_L[row][col]
-        step_U[row][col], step_U[row - 1][col] = step_U[row - 1][col], step_U[row][col]
-        return "LU", step_L, step_U
+        result = order.replace("D", '')
+        result = result.replace("R", '')
+        return result[0], result[1]
 
     # bottom left corner
     elif row == size_y - 1 and col == 0:
-        print("UR")
-        step_U[row][col], step_U[row - 1][col] = step_U[row - 1][col], step_U[row][col]
-        step_R[row][col], step_R[row][col + 1] = step_R[row][col + 1], step_R[row][col]
-        return "UR", step_U, step_R
+        result = order.replace("L", '')
+        result = result.replace("D", '')
+        return result[0], result[1]
 
     # EDGES
     # top edge
     elif row == 0:
-        print("RDL")
-        step_R[row][col], step_R[row][col + 1] = step_R[row][col + 1], step_R[row][col]
-        step_D[row][col], step_D[row + 1][col] = step_D[row + 1][col], step_D[row][col]
-        step_L[row][col], step_L[row][col - 1] = step_L[row][col - 1], step_L[row][col]
-        return "RDL", step_R, step_D, step_L
+        result = order.replace("U", '')
+        return result[0], result[1], result[2]
 
     # right edge
     elif col == size_x - 1:
-        print("DLU")
-        step_D[row][col], step_D[row + 1][col] = step_D[row + 1][col], step_D[row][col]
-        step_L[row][col], step_L[row][col - 1] = step_L[row][col - 1], step_L[row][col]
-        step_U[row][col], step_U[row - 1][col] = step_U[row - 1][col], step_U[row][col]
-        return "DLU", step_D, step_L, step_U
+        result = order.replace("R", '')
+        return result[0], result[1], result[2]
 
     # bottom edge
     elif row == size_y - 1:
-        print("LUR")
-        step_L[row][col], step_L[row][col - 1] = step_L[row][col - 1], step_L[row][col]
-        step_U[row][col], step_U[row - 1][col] = step_U[row - 1][col], step_U[row][col]
-        step_R[row][col], step_R[row][col + 1] = step_R[row][col + 1], step_R[row][col]
-        return "LUR", step_L, step_U, step_R
+        result = order.replace("D", '')
+        return result[0], result[1], result[2]
 
     # left edge
     elif col == 0:
-        print("URD")
-        step_U[row][col], step_U[row - 1][col] = step_U[row - 1][col], step_U[row][col]
-        step_R[row][col], step_R[row][col + 1] = step_R[row][col + 1], step_R[row][col]
-        step_D[row][col], step_D[row + 1][col] = step_D[row + 1][col], step_D[row][col]
-        return "URD", step_U, step_R, step_D
+        result = order.replace("L", '')
+        return result[0], result[1], result[2]
 
     # MIDDLE
     else:
-        print("URDL")
-        step_U[row][col], step_U[row - 1][col] = step_U[row - 1][col], step_U[row][col]
-        step_R[row][col], step_R[row][col + 1] = step_R[row][col + 1], step_R[row][col]
-        step_D[row][col], step_D[row + 1][col] = step_D[row + 1][col], step_D[row][col]
-        step_L[row][col], step_L[row][col - 1] = step_L[row][col - 1], step_L[row][col]
-        return "URDL", step_U, step_R, step_D, step_L
+        return order[0], order[1], order[2], order[3]
 
 
 if __name__ == '__main__':
@@ -167,13 +141,5 @@ if __name__ == '__main__':
     step_t = Step(None, None, moves, TARGET_STATE)
     step_e = Step(None, None, moves, EXPERIMENTAL_STATE)
 
-    # print(createNeighborStates(step_t)[0])
-    # print_board(createNeighborStates(step_t)[1])
-    # print_board(createNeighborStates(step_t)[2])
-    # print()
-    print(createNeighborStates(step_e)[0])
-    print_board(createNeighborStates(step_e)[1])
-    print_board(createNeighborStates(step_e)[2])
-    print_board(createNeighborStates(step_e)[3])
-    print_board(createNeighborStates(step_e)[4])
+    print(getPossibleDirections(step_e.board, "LRDU"))
 
