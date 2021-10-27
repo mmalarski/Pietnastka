@@ -30,31 +30,33 @@ class Step:
 
     def create_next_step(self, move, new_board):
         next_step = Step(self, move, self.all_moves, new_board)
+        return next_step
 
     def move_step(self, move, board_state, x, y):
         new_arr = deepcopy(board_state)
+
         if move == 'U':
             new_arr[x - 1][y] = board_state[x][y]
             new_arr[x][y] = board_state[x - 1][y]
-            self.create_next_step(move, new_arr)
+            new_step = self.create_next_step(move, new_arr)
             POS[0] = x - 1
         elif move == 'D':
             new_arr[x + 1][y] = board_state[x][y]
             new_arr[x][y] = board_state[x + 1][y]
-            self.create_next_step(move, new_arr)
+            new_step = self.create_next_step(move, new_arr)
             POS[0] = x + 1
         elif move == 'R':
             new_arr[x][y + 1] = board_state[x][y]
             new_arr[x][y] = board_state[x][y + 1]
-            self.create_next_step(move, new_arr)
+            new_step = self.create_next_step(move, new_arr)
             POS[1] = y + 1
         elif move == 'L':
             print(x, y, len(new_arr[0]), len(board_state[0]))
             new_arr[x][y - 1] = board_state[x][y]
             new_arr[x][y] = board_state[x][y - 1]
-            self.create_next_step(move, new_arr)
+            new_step = self.create_next_step(move, new_arr)
             POS[1] = y - 1
-        return x, y
+        return new_step
 
     def is_child(self, other_step, dir):
         copystep = deepcopy(other_step)
@@ -114,7 +116,7 @@ def dfs():
         if sym not in [b.board for b in open_list]:  # child is not on open list
             if sym not in [b.board for b in closed_list]:  # child is not on closed list
 
-                print(step.move_step(posdirs[0], step.board, POS[0], POS[1]))
+                step = step.move_step(posdirs[0], step.board, POS[0], POS[1])
                 print_board(step.board)
                 open_list.append(step)
             else:  # child is on closed list
