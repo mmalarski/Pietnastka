@@ -6,9 +6,9 @@ TARGET_STATE = [[1, 2, 3, 4],
                 [9, 10, 11, 12],
                 [13, 14, 15, 0]]
 INITIAL_STATE = [[1, 2, 3, 4],
-                [5, 6, 0, 7],
-                [9, 10, 11, 8],
-                [13, 14, 15, 12]]
+                 [5, 6, 0, 7],
+                 [9, 10, 11, 8],
+                 [13, 14, 15, 12]]
 ORDER = "LURD"
 EXPERIMENTAL_STATE = [[8, 15, 3, 0],
                       [5, 6, 4, 11],
@@ -16,7 +16,6 @@ EXPERIMENTAL_STATE = [[8, 15, 3, 0],
                       [1, 14, 7, 13]]
 
 POS = [0, 0]
-
 
 
 class Step:
@@ -34,7 +33,7 @@ class Step:
 
     def move_step(self, move, board_state, x, y):
         new_arr = deepcopy(board_state)
-
+        new_step = None
         if move == 'U':
             new_arr[x - 1][y] = board_state[x][y]
             new_arr[x][y] = board_state[x - 1][y]
@@ -51,7 +50,6 @@ class Step:
             new_step = self.create_next_step(move, new_arr)
             POS[1] = y + 1
         elif move == 'L':
-            print(x, y)
             new_arr[x][y - 1] = board_state[x][y]
             new_arr[x][y] = board_state[x][y - 1]
             new_step = self.create_next_step(move, new_arr)
@@ -68,6 +66,7 @@ class Step:
 
 
 def find_zero(board):
+    x, y = None, None
     for row in range(len(board)):
         for column in range(len(board[row])):
             if board[row][column] == 0:
@@ -98,60 +97,71 @@ def bfs():
 
 
 def dfs():
-    print("dfs")
     step = Step(None, None, [], INITIAL_STATE)
     open_list = [step]
     closed_list = {}
     POS[0], POS[1] = find_zero(INITIAL_STATE)
-    zero_pos_x, zero_pos_y = find_zero(INITIAL_STATE)
+    move_to_CL = False
+    iteration_counter = 0
+    debug_counter = 0
     while step.board != TARGET_STATE:
-        print('1', step.board)
-        zero_pos_x, zero_pos_y =  POS[0], POS[1]
-        posdirs = getPossibleDirections(step.board, ORDER)
-        print(posdirs)
-        print(open_list)
-        print(closed_list)
-        print()
-        sym = sym_move_step(posdirs[0], step.board, zero_pos_x, zero_pos_y)
-        print_board(sym)
-        if sym not in [b.board for b in open_list]:  # child is not on open list
-            if sym not in [b.board for b in closed_list]:  # child is not on closed list
+        print(debug_counter)
+        zero_pos_x, zero_pos_y = POS[0], POS[1]
+        posdirs = [char for char in getPossibleDirections(step.board, ORDER)]
+        for direction in posdirs:
+            sym = sym_move_step(direction, step.board, zero_pos_x, zero_pos_y)
+            if sym not in [b.board for b in open_list]:  # child is not on open list
+                if sym not in [b.board for b in closed_list]:  # child is not on closed list
+                    step = step.move_step(posdirs[0], step.board, POS[0], POS[1])
+                    open_list.append(step)
+                    break
+                else:  # child is on closed list
+                    posdirs.pop(0)
+                    for i in posdirs:
+                        if posdirs[0] in closed_list:
+                            posdirs.pop()
+                            if len(posdirs) == 0:
+                                open_list.remove(step)
+                                closed_list.append(step)
+                                step = step.parent
+                        else:
+                            break
+                    step.move_step(posdirs[0], step.board, zero_pos_x, zero_pos_y)
+                    open_list.append(step)
+                    break
+            iteration_counter = iteration_counter + 1
+        if iteration_counter == len(posdirs):
+            move_to_CL = True
+        if move_to_CL:
+            continue
+        else:
+            open_list.remove(step)
+            closed_list[step] = step
+            step = step.parent
 
-                step = step.move_step(posdirs[0], step.board, POS[0], POS[1])
-                print_board(step.board)
-                open_list.append(step)
-            else:  # child is on closed list
-                posdirs.pop(0)
-                for i in posdirs:
-                    if posdirs[0] in closed_list:
-                        posdirs.pop()
-                        if len(posdirs) == 0:
-                            open_list.remove(step)
-                            closed_list.append(step)
-                            step = step.parent
-                    else:
-                        break
-                step.move_step(posdirs[0], step.board, zero_pos_x, zero_pos_y)
-                open_list.append(step)
-        else:  # parent is on the open list
-            copystep = deepcopy(step)
-            temp_x = deepcopy(zero_pos_x)
-            temp_y = deepcopy(zero_pos_y)
-            copystep.move_step(posdirs[0], copystep.board, temp_x, temp_y)
-            if copystep != step.parent:
-                open_list.remove(step)
-                closed_list[step] = step
-                step = step.parent
-            else:
-                posdirs.pop(0)
-                for i in posdirs:
-                    if posdirs[0] in closed_list:
-                        posdirs.pop()
-                        if len(posdirs) == 0:
-                            return -1
-                    else:
-                        step.move_step(posdirs[0], state.board, zero_pos_x, zero_pos_y)
-                        open_list.append(step)
+
+
+
+
+
+            # copystep = deepcopy(step)
+            # temp_x = deepcopy(zero_pos_x)
+            # temp_y = deepcopy(zero_pos_y)
+            # copystep.move_step(posdirs[0], copystep.board, temp_x, temp_y)
+            # if copystep != step.parent:
+            #     open_list.remove(step)
+            #     closed_list[step] = step
+            #     step = step.parent
+            # else:
+            #     posdirs.pop(0)
+            #     for i in posdirs:
+            #         if posdirs[0] in closed_list:
+            #             posdirs.pop()
+            #             if len(posdirs) == 0:
+            #                 return -1
+            #         else:
+            #             step.move_step(posdirs[0], state.board, zero_pos_x, zero_pos_y)
+            #             open_list.append(step)
 
 
 def a_star():
