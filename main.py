@@ -6,9 +6,9 @@ TARGET_STATE = [[1, 2, 3, 4],
                 [9, 10, 11, 12],
                 [13, 14, 15, 0]]
 INITIAL_STATE = [[1, 2, 3, 4],
-                 [5, 6, 0, 7],
-                 [9, 10, 11, 8],
-                 [13, 14, 15, 12]]
+                [5, 6, 0, 7],
+                [9, 10, 11, 8],
+                [13, 14, 15, 12]]
 ORDER = "LURD"
 EXPERIMENTAL_STATE = [[8, 15, 3, 0],
                       [5, 6, 4, 11],
@@ -16,6 +16,7 @@ EXPERIMENTAL_STATE = [[8, 15, 3, 0],
                       [1, 14, 7, 13]]
 
 POS = [0, 0]
+
 
 
 class Step:
@@ -33,7 +34,7 @@ class Step:
 
     def move_step(self, move, board_state, x, y):
         new_arr = deepcopy(board_state)
-        new_step = None
+
         if move == 'U':
             new_arr[x - 1][y] = board_state[x][y]
             new_arr[x][y] = board_state[x - 1][y]
@@ -97,28 +98,34 @@ def bfs():
 
 
 def dfs():
+    print("dfs")
     step = Step(None, None, [], INITIAL_STATE)
-    open_list = [step]
-    closed_list = {}
-    POS[0], POS[1] = find_zero(INITIAL_STATE)
+    open_list = [step]  # for steps that we stepped into
+    closed_list = {}  # for steps with all neighbours checked
+    POS[0], POS[1] = find_zero(INITIAL_STATE)  # zeros position on the board
     move_to_CL = False
     iteration_counter = 0
     debug_counter = 0
     while step.board != TARGET_STATE:
         print(debug_counter)
+        print_board(step.board)
+        print_board(open_list)
         zero_pos_x, zero_pos_y = POS[0], POS[1]
         posdirs = [char for char in getPossibleDirections(step.board, ORDER)]
         for direction in posdirs:
-            sym = sym_move_step(direction, step.board, zero_pos_x, zero_pos_y)
+            sym = sym_move_step(direction, step.board, zero_pos_x, zero_pos_y)  # board sym for the specific direction
             if sym not in [b.board for b in open_list]:  # child is not on open list
                 if sym not in [b.board for b in closed_list]:  # child is not on closed list
-                    step = step.move_step(posdirs[0], step.board, POS[0], POS[1])
-                    open_list.append(step)
-                    break
+                    print('out')
+                    # step = step.move_step(posdirs[0], step.board, POS[0], POS[1])  # not on lists so we move
+                    step = step.move_step(direction, step.board, POS[0], POS[1])
+                    print_board(step.board)
+                    open_list.append(step)  # adding current step to open_list
+                    break  # getting out of for statement
                 else:  # child is on closed list
-                    posdirs.pop(0)
+                    posdirs.pop(0)  # we remove child's direction from direction list
                     for i in posdirs:
-                        if posdirs[0] in closed_list:
+                        if sym in closed_list:
                             posdirs.pop()
                             if len(posdirs) == 0:
                                 open_list.remove(step)
@@ -126,18 +133,27 @@ def dfs():
                                 step = step.parent
                         else:
                             break
-                    step.move_step(posdirs[0], step.board, zero_pos_x, zero_pos_y)
+                    # step = step.move_step(posdirs[0], step.board, POS[0], POS[1])
+                    step = step.move_step(direction, step.board, POS[0], POS[1])
                     open_list.append(step)
                     break
             iteration_counter = iteration_counter + 1
+            print(iteration_counter)
         if iteration_counter == len(posdirs):
-            move_to_CL = True
-        if move_to_CL:
-            continue
-        else:
+            # move_to_CL = True
+            iteration_counter = 0
             open_list.remove(step)
             closed_list[step] = step
             step = step.parent
+            # continue
+        # if move_to_CL:
+        #     continue
+        else:
+            continue
+            # open_list.remove(step)
+            # closed_list[step] = step
+            # step = step.parent
+
 
 
 
@@ -239,8 +255,8 @@ def getPossibleDirections(board, order):
 
 if __name__ == '__main__':
     moves = [0]
-    step_t = Step(None, None, moves, TARGET_STATE)
-    step_e = Step(None, None, moves, EXPERIMENTAL_STATE)
+    # step_t = Step(None, None, moves, TARGET_STATE)
+    # step_e = Step(None, None, moves, EXPERIMENTAL_STATE)
     dfs()
 
-    print(getPossibleDirections(step_e.board, ORDER))
+    # print(getPossibleDirections(step_e.board, ORDER))
