@@ -5,12 +5,18 @@ TARGET_STATE = [[1, 2, 3, 4],
                 [5, 6, 7, 8],
                 [9, 10, 11, 12],
                 [13, 14, 15, 0]]
-INITIAL_STATE = []
+INITIAL_STATE = [[1, 2, 3, 4],
+                [5, 6, 0, 7],
+                [9, 10, 11, 8],
+                [13, 14, 15, 12]]
 ORDER = "LURD"
 EXPERIMENTAL_STATE = [[8, 15, 3, 0],
                       [5, 6, 4, 11],
                       [2, 9, 10, 12],
                       [1, 14, 7, 13]]
+
+POS = [0, 0]
+
 
 
 class Step:
@@ -19,33 +25,35 @@ class Step:
         self.previous_move = previous_move
         self.all_moves = all_moves
         self.board = board
-        self.all_moves.append(previous_move)
+        if previous_move is not None:
+            self.all_moves.append(previous_move)
 
     def create_next_step(self, move, new_board):
         next_step = Step(self, move, self.all_moves, new_board)
 
     def move_step(self, move, board_state, x, y):
-        new_arr = board_state
+        new_arr = deepcopy(board_state)
         if move == 'U':
-            new_arr[x - 1][y] = row[x][y]
-            new_arr[x][y] = row[x - 1][y]
+            new_arr[x - 1][y] = board_state[x][y]
+            new_arr[x][y] = board_state[x - 1][y]
             self.create_next_step(move, new_arr)
-            x = x - 1
+            POS[0] = x - 1
         elif move == 'D':
-            new_arr[x + 1][y] = row[x][y]
-            new_arr[x][y] = row[x + 1][y]
+            new_arr[x + 1][y] = board_state[x][y]
+            new_arr[x][y] = board_state[x + 1][y]
             self.create_next_step(move, new_arr)
-            x = x + 1
+            POS[0] = x + 1
         elif move == 'R':
-            new_arr[x][y + 1] = row[x][y]
-            new_arr[x][y] = row[x][y + 1]
+            new_arr[x][y + 1] = board_state[x][y]
+            new_arr[x][y] = board_state[x][y + 1]
             self.create_next_step(move, new_arr)
-            y = y + 1
+            POS[1] = y + 1
         elif move == 'L':
-            new_arr[x][y - 1] = row[x][y]
-            new_arr[x][y] = row[x][y - 1]
+            print(x, y, len(new_arr[0]), len(board_state[0]))
+            new_arr[x][y - 1] = board_state[x][y]
+            new_arr[x][y] = board_state[x][y - 1]
             self.create_next_step(move, new_arr)
-            y = y - 1
+            POS[1] = y - 1
         return x, y
 
     def is_child(self, other_step, dir):
@@ -66,6 +74,23 @@ def find_zero(board):
     return x, y
 
 
+def sym_move_step(move, board_state, x, y):
+    new_arr = deepcopy(board_state)
+    if move == 'U':
+        new_arr[x - 1][y] = board_state[x][y]
+        new_arr[x][y] = board_state[x - 1][y]
+    elif move == 'D':
+        new_arr[x + 1][y] = board_state[x][y]
+        new_arr[x][y] = board_state[x + 1][y]
+    elif move == 'R':
+        new_arr[x][y + 1] = board_state[x][y]
+        new_arr[x][y] = board_state[x][y + 1]
+    elif move == 'L':
+        new_arr[x][y - 1] = board_state[x][y]
+        new_arr[x][y] = board_state[x][y - 1]
+    return new_arr
+
+
 def bfs():
     print("bfs")
 
@@ -75,13 +100,22 @@ def dfs():
     step = Step(None, None, [], INITIAL_STATE)
     open_list = [step]
     closed_list = {}
+    POS[0], POS[1] = find_zero(INITIAL_STATE)
     zero_pos_x, zero_pos_y = find_zero(INITIAL_STATE)
     while step.board != TARGET_STATE:
 
-        posdirs = getPossibleDirections(step.board)
-        if posdirs[0] not in open_list:  # child is not on open list
-            if posdirs[0] not in closed_list:  # child is not on closed list
-                step.move_step(posdirs[0], state.board, zero_pos_x, zero_pos_y)
+        posdirs = getPossibleDirections(step.board, ORDER)
+        print(posdirs)
+        print(open_list)
+        print(closed_list)
+        print()
+        sym = sym_move_step(posdirs[0], step.board, zero_pos_x, zero_pos_y)
+        print_board(sym)
+        if sym not in [b.board for b in open_list]:  # child is not on open list
+            if sym not in [b.board for b in closed_list]:  # child is not on closed list
+
+                print(step.move_step(posdirs[0], step.board, POS[0], POS[1]))
+                print_board(step.board)
                 open_list.append(step)
             else:  # child is on closed list
                 posdirs.pop(0)
@@ -94,7 +128,7 @@ def dfs():
                             step = step.parent
                     else:
                         break
-                step.move_step(posdirs[0], state.board, zero_pos_x, zero_pos_y)
+                step.move_step(posdirs[0], step.board, zero_pos_x, zero_pos_y)
                 open_list.append(step)
         else:  # parent is on the open list
             copystep = deepcopy(step)
@@ -194,5 +228,6 @@ if __name__ == '__main__':
     moves = [0]
     step_t = Step(None, None, moves, TARGET_STATE)
     step_e = Step(None, None, moves, EXPERIMENTAL_STATE)
+    dfs()
 
     print(getPossibleDirections(step_e.board, ORDER))
