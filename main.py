@@ -6,8 +6,8 @@ DEPTH = 20
 #                 [9, 10, 11, 12],
 #                 [13, 14, 15, 0]]
 TARGET_STATE = [[1, 2, 3],
-                 [4, 5, 6],
-                 [7, 8, 0]]
+                [4, 5, 6],
+                [7, 8, 0]]
 # INITIAL_STATE = [[1, 2, 3, 0],
 #                  [5, 6, 7, 4],
 #                  [9, 10, 11, 8],
@@ -15,14 +15,21 @@ TARGET_STATE = [[1, 2, 3],
 INITIAL_STATE = [[1, 2, 3],
                  [4, 0, 6],
                  [7, 5, 8]]
-ORDER = "DLUR"
 EXPERIMENTAL_STATE = [[8, 15, 3, 0],
                       [5, 6, 4, 11],
                       [2, 9, 10, 12],
                       [1, 14, 7, 13]]
+ORDER = "RDUL"
+# ORDER = "RDLU"
+# ORDER = "DRUL"
+# ORDER = "DRUL"
+# ORDER = "DRLU"
+# ORDER = "LUDR"
+# ORDER = "LURD"
+# ORDER = "ULDR"
+# ORDER = "ULRD"
 
 POS = [0, 0]
-
 
 
 class Step:
@@ -40,6 +47,7 @@ class Step:
 
     def move_step(self, move, board_state, x, y):
         new_arr = deepcopy(board_state)
+        new_step = None
 
         if move == 'U':
             new_arr[x - 1][y] = board_state[x][y]
@@ -61,15 +69,9 @@ class Step:
             new_arr[x][y] = board_state[x][y - 1]
             new_step = self.create_next_step(move, new_arr)
             POS[1] = y - 1
+        else:
+            print("step.move_step: wrong letter")
         return new_step
-
-    def is_child(self, other_step, dir):
-        copystep = deepcopy(other_step)
-        x, y = find_zero(copystep)
-        copystep.move_step(dir, copystep.board, temp_x, temp_y)
-        if self.board == other_step.board:
-            return true
-        return false
 
 
 def find_zero(board):
@@ -104,46 +106,31 @@ def bfs():
 
 
 def dfs():
-    print("dfs")
     step = Step(None, None, [], INITIAL_STATE)
     open_list = [step]  # for steps that we stepped into
     closed_list = {}  # for steps with all neighbours checked
-    POS[0], POS[1] = find_zero(INITIAL_STATE)  # zeros position on the board
-    move_to_CL = False
-    iteration_counter = 0
-    debug_counter = 0
     print('START')
     print_board(step.board)
     while (step.board != TARGET_STATE) and (len(step.all_moves) - 1 != DEPTH):
-        POS[0], POS[1] = find_zero(step.board)
-        print_board(step.all_moves)
-        # print(debug_counter)
-        # print_board(open_list)
-        # print_board(closed_list)
         posdirs = [char for char in getPossibleDirections(step.board, ORDER)]
         iteration_counter = 0
-        print(POS[0], POS[1], posdirs)
         for direction in posdirs:
-            print(direction)
-            sym = sym_move_step(direction, step.board, POS[0], POS[1])  # board sym for the specific direction
+            sym = sym_move_step(direction, step.board, find_zero(step.board)[0],
+                                find_zero(step.board)[1])  # board sym for the specific direction
             if sym not in [b.board for b in open_list]:  # child is not on open list
                 if sym not in [b.board for b in closed_list]:  # child is not on closed list
-                    print('out', direction)
-                    step = step.move_step(direction, step.board, POS[0], POS[1])  # not on lists so we move
+                    step = step.move_step(direction, step.board, find_zero(step.board)[0],
+                                          find_zero(step.board)[1])  # not on lists so we move
                     print_board(step.board)
                     open_list.append(step)  # adding current step to open_list
                     break  # getting out of for statement
             iteration_counter = iteration_counter + 1
-            # print(iteration_counter)
-            POS[0], POS[1] = find_zero(step.board)
-        POS[0], POS[1] = find_zero(step.board)
         if iteration_counter == len(posdirs):
             open_list.remove(step)
             closed_list[step] = step
             step = step.parent
-            POS[0], POS[1] = find_zero(step.board)
     if len(step.all_moves) - 1 == DEPTH:
-        print('the end')
+        print('Depth reached, this is the end')
 
 
 def a_star():
