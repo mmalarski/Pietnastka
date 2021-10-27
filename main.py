@@ -107,11 +107,14 @@ def dfs():
     iteration_counter = 0
     debug_counter = 0
     while step.board != TARGET_STATE:
-        print(debug_counter)
+        # print(debug_counter)
+        print('START')
         print_board(step.board)
-        print_board(open_list)
+        # print_board(open_list)
+        # print_board(closed_list)
         zero_pos_x, zero_pos_y = POS[0], POS[1]
         posdirs = [char for char in getPossibleDirections(step.board, ORDER)]
+        iteration_counter = 0
         for direction in posdirs:
             sym = sym_move_step(direction, step.board, zero_pos_x, zero_pos_y)  # board sym for the specific direction
             if sym not in [b.board for b in open_list]:  # child is not on open list
@@ -126,7 +129,7 @@ def dfs():
                     posdirs.pop(0)  # we remove child's direction from direction list
                     for i in posdirs:
                         if sym in closed_list:
-                            posdirs.pop()
+                            posdirs.pop(i)
                             if len(posdirs) == 0:
                                 open_list.remove(step)
                                 closed_list.append(step)
