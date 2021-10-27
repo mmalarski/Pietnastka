@@ -24,6 +24,7 @@ EXPERIMENTAL_STATE = [[8, 15, 3, 0],
 POS = [0, 0]
 
 
+
 class Step:
     def __init__(self, parent, previous_move, all_moves, board):
         self.parent = parent
@@ -113,7 +114,9 @@ def dfs():
     debug_counter = 0
     print('START')
     print_board(step.board)
-    while step.board != TARGET_STATE:
+    while (step.board != TARGET_STATE) and (len(step.all_moves) - 1 != DEPTH):
+        POS[0], POS[1] = find_zero(step.board)
+        print_board(step.all_moves)
         # print(debug_counter)
         # print_board(open_list)
         # print_board(closed_list)
@@ -126,43 +129,21 @@ def dfs():
             if sym not in [b.board for b in open_list]:  # child is not on open list
                 if sym not in [b.board for b in closed_list]:  # child is not on closed list
                     print('out', direction)
-                    # step = step.move_step(posdirs[0], step.board, POS[0], POS[1])  # not on lists so we move
-                    step = step.move_step(direction, step.board, POS[0], POS[1])
+                    step = step.move_step(direction, step.board, POS[0], POS[1])  # not on lists so we move
                     print_board(step.board)
                     open_list.append(step)  # adding current step to open_list
                     break  # getting out of for statement
-                # else:  # child is on closed list
-                    # posdirs.pop(0)  # we remove child's direction from direction list
-                    # for i in posdirs:
-                    #     if sym in closed_list:
-                    #         posdirs.pop(i)
-                    #         if len(posdirs) == 0:
-                    #             open_list.remove(step)
-                    #             closed_list[step] = step
-                    #             step = step.parent
-                    #             print('''
-                    #
-                    #             HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH
-                    #             EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE
-                    #             LLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL
-                    #             LLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL
-                    #             OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO
-                    #
-                    #             ''')
-                    #     else:
-                    #         break
-                    # # step = step.move_step(posdirs[0], step.board, POS[0], POS[1])
-                    # step = step.move_step(direction, step.board, POS[0], POS[1])
-                    # open_list.append(step)
-                    # break
             iteration_counter = iteration_counter + 1
             # print(iteration_counter)
+            POS[0], POS[1] = find_zero(step.board)
+        POS[0], POS[1] = find_zero(step.board)
         if iteration_counter == len(posdirs):
-            # move_to_CL = True
-            iteration_counter = 0
             open_list.remove(step)
             closed_list[step] = step
             step = step.parent
+            POS[0], POS[1] = find_zero(step.board)
+    if len(step.all_moves) - 1 == DEPTH:
+        print('the end')
 
 
 def a_star():
