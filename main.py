@@ -51,7 +51,7 @@ class Step:
             new_step = self.create_next_step(move, new_arr)
             POS[1] = y + 1
         elif move == 'L':
-            print(x, y, len(new_arr[0]), len(board_state[0]))
+            print(x, y)
             new_arr[x][y - 1] = board_state[x][y]
             new_arr[x][y] = board_state[x][y - 1]
             new_step = self.create_next_step(move, new_arr)
@@ -105,7 +105,8 @@ def dfs():
     POS[0], POS[1] = find_zero(INITIAL_STATE)
     zero_pos_x, zero_pos_y = find_zero(INITIAL_STATE)
     while step.board != TARGET_STATE:
-
+        print('1', step.board)
+        zero_pos_x, zero_pos_y =  POS[0], POS[1]
         posdirs = getPossibleDirections(step.board, ORDER)
         print(posdirs)
         print(open_list)
@@ -139,7 +140,7 @@ def dfs():
             copystep.move_step(posdirs[0], copystep.board, temp_x, temp_y)
             if copystep != step.parent:
                 open_list.remove(step)
-                closed_list.append(step)
+                closed_list[step] = step
                 step = step.parent
             else:
                 posdirs.pop(0)
