@@ -1,6 +1,6 @@
 from copy import deepcopy
 
-DEPTH = 20
+DEPTH = 100
 # TARGET_STATE = [[1, 2, 3, 4],
 #                 [5, 6, 7, 8],
 #                 [9, 10, 11, 12],
@@ -12,16 +12,16 @@ TARGET_STATE = [[1, 2, 3],
 #                  [5, 6, 7, 4],
 #                  [9, 10, 11, 8],
 #                  [13, 14, 15, 12]]
-INITIAL_STATE = [[1, 2, 3],
-                 [4, 0, 6],
+INITIAL_STATE = [[1, 3, 0],
+                 [4, 2, 6],
                  [7, 5, 8]]
 EXPERIMENTAL_STATE = [[8, 15, 3, 0],
                       [5, 6, 4, 11],
                       [2, 9, 10, 12],
                       [1, 14, 7, 13]]
-ORDER = "RDUL"
+# ORDER = "RDUL"
 # ORDER = "RDLU"
-# ORDER = "DRUL"
+ORDER = "DRUL"
 # ORDER = "DRUL"
 # ORDER = "DRLU"
 # ORDER = "LUDR"
@@ -131,6 +131,20 @@ def dfs():
             step = step.parent
     if len(step.all_moves) - 1 == DEPTH:
         print('Depth reached, this is the end')
+        return None
+    return listToString(step.all_moves), len(listToString(step.all_moves))
+
+
+def listToString(s):
+    # initialize an empty string
+    str1 = ""
+
+    # traverse in the string
+    for ele in s:
+        str1 += ele
+
+        # return string
+    return str1
 
 
 def a_star():
@@ -210,6 +224,6 @@ if __name__ == '__main__':
     moves = [0]
     # step_t = Step(None, None, moves, TARGET_STATE)
     # step_e = Step(None, None, moves, EXPERIMENTAL_STATE)
-    dfs()
+    print(dfs())
 
     # print(getPossibleDirections(step_e.board, ORDER))
