@@ -6,8 +6,9 @@ TARGET_STATE = [[1, 2, 3, 4],
                 [9, 10, 11, 12],
                 [13, 14, 15, 0]]
 INITIAL_STATE = []
-EXPERIMENTAL_STATE = [[11, 8, 3, 15],
-                      [5, 6, 4, 0],
+ORDER = "LURD"
+EXPERIMENTAL_STATE = [[8, 15, 3, 0],
+                      [5, 6, 4, 11],
                       [2, 9, 10, 12],
                       [1, 14, 7, 13]]
 
@@ -47,6 +48,14 @@ class Step:
             y = y - 1
         return x, y
 
+    def is_child(self, other_step, dir):
+        copystep = deepcopy(other_step)
+        x, y = find_zero(copystep)
+        copystep.move_step(dir, copystep.board, temp_x, temp_y)
+        if self.board == other_step.board:
+            return true
+        return false
+
 
 def find_zero(board):
     for row in range(len(board)):
@@ -68,6 +77,7 @@ def dfs():
     closed_list = {}
     zero_pos_x, zero_pos_y = find_zero(INITIAL_STATE)
     while step.board != TARGET_STATE:
+
         posdirs = getPossibleDirections(step.board)
         if posdirs[0] not in open_list:  # child is not on open list
             if posdirs[0] not in closed_list:  # child is not on closed list
@@ -124,47 +134,55 @@ def getPossibleDirections(board, order):
     # CORNERS
     # top left corner
     if row == 0 and col == 0:
-        result = order.replace("U", '')
-        result = result.replace("L", '')
+        result = [char for char in order if char not in "UL"]
+        # result = order.replace("U", '')
+        # result = result.replace("L", '')
         return result[0], result[1]
 
     # top right corner
     elif row == 0 and col == size_x - 1:
-        result = order.replace("U", '')
-        result = result.replace("R", '')
+        result = [char for char in order if char not in "UR"]
+        # result = order.replace("U", '')
+        # result = result.replace("R", '')
         return result[0], result[1]
 
     # bottom right corner
     elif row == size_y - 1 and col == size_x - 1:
-        result = order.replace("D", '')
-        result = result.replace("R", '')
+        result = [char for char in order if char not in "DR"]
+        # result = order.replace("D", '')
+        # result = result.replace("R", '')
         return result[0], result[1]
 
     # bottom left corner
     elif row == size_y - 1 and col == 0:
-        result = order.replace("L", '')
-        result = result.replace("D", '')
+        result = [char for char in order if char not in "LD"]
+        # result = order.replace("L", '')
+        # result = result.replace("D", '')
         return result[0], result[1]
 
     # EDGES
     # top edge
     elif row == 0:
-        result = order.replace("U", '')
+        result = [char for char in order if char not in "U"]
+        # result = order.replace("U", '')
         return result[0], result[1], result[2]
 
     # right edge
     elif col == size_x - 1:
-        result = order.replace("R", '')
+        result = [char for char in order if char not in "R"]
+        # result = order.replace("R", '')
         return result[0], result[1], result[2]
 
     # bottom edge
     elif row == size_y - 1:
-        result = order.replace("D", '')
+        result = [char for char in order if char not in "D"]
+        # result = order.replace("D", '')
         return result[0], result[1], result[2]
 
     # left edge
     elif col == 0:
-        result = order.replace("L", '')
+        result = [char for char in order if char not in "L"]
+        # result = order.replace("L", '')
         return result[0], result[1], result[2]
 
     # MIDDLE
@@ -177,4 +195,4 @@ if __name__ == '__main__':
     step_t = Step(None, None, moves, TARGET_STATE)
     step_e = Step(None, None, moves, EXPERIMENTAL_STATE)
 
-    print(getPossibleDirections(step_e.board, "LRDU"))
+    print(getPossibleDirections(step_e.board, ORDER))
