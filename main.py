@@ -102,7 +102,27 @@ def sym_move_step(move, board_state, x, y):
 
 
 def bfs():
-    print("bfs")
+    opposite_directions = {"U": "D", "L": "R", "R": "L", "D": "U"}
+    step = Step(None, None, [], INITIAL_STATE)
+    step_temp = Step(None, None, [], INITIAL_STATE)
+    open_list = []  # for steps that we stepped into
+    closed_list = {step: step}  # for steps with all neighbours checked
+    print('START')
+    print_board(step.board)
+    while step.board != TARGET_STATE and len(step.all_moves - 1 != DEPTH):
+        posdirs = [char for char in getPossibleDirections(step.board, ORDER)]
+        iteration_counter = 0
+        for direction in posdirs:
+            sym = sym_move_step(direction, step.board, find_zero(step.board)[0],
+                                find_zero(step.board)[1])
+            if sym not in [b.board for b in closed_list]:
+                if sym not in [b.board for b in open_list]:
+                    step_temp.move_step(direction, step.board, find_zero(step.board)[0],
+                                        find_zero(step.board)[1])
+                    open_list.append(step_temp)
+                    step_temp.move_step(opposite_directions[direction])
+            # to be continued
+        closed_list[step] = step
 
 
 def dfs():
@@ -136,14 +156,9 @@ def dfs():
 
 
 def listToString(s):
-    # initialize an empty string
     str1 = ""
-
-    # traverse in the string
     for ele in s:
         str1 += ele
-
-        # return string
     return str1
 
 
@@ -225,5 +240,6 @@ if __name__ == '__main__':
     # step_t = Step(None, None, moves, TARGET_STATE)
     # step_e = Step(None, None, moves, EXPERIMENTAL_STATE)
     print(dfs())
+    # bfs()
 
     # print(getPossibleDirections(step_e.board, ORDER))
