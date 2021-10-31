@@ -104,25 +104,36 @@ def sym_move_step(move, board_state, x, y):
 def bfs():
     opposite_directions = {"U": "D", "L": "R", "R": "L", "D": "U"}
     step = Step(None, None, [], INITIAL_STATE)
-    step_temp = Step(None, None, [], INITIAL_STATE)
-    open_list = []  # for steps that we stepped into
-    closed_list = {step: step}  # for steps with all neighbours checked
+    open_list = [step]  # for steps that we stepped into
+    closed_list = {}  # for steps with all neighbours checked
     print('START')
     print_board(step.board)
-    while step.board != TARGET_STATE and len(step.all_moves - 1 != DEPTH):
+    while step.board != TARGET_STATE and len(step.all_moves) - 1 != DEPTH:
         posdirs = [char for char in getPossibleDirections(step.board, ORDER)]
         iteration_counter = 0
         for direction in posdirs:
             sym = sym_move_step(direction, step.board, find_zero(step.board)[0],
                                 find_zero(step.board)[1])
-            if sym not in [b.board for b in closed_list]:
-                if sym not in [b.board for b in open_list]:
-                    step_temp.move_step(direction, step.board, find_zero(step.board)[0],
-                                        find_zero(step.board)[1])
-                    open_list.append(step_temp)
-                    step_temp.move_step(opposite_directions[direction])
-            # to be continued
-        closed_list[step] = step
+            if sym not in [b.board for b in closed_list] and sym not in [b.board for b in open_list]:
+                print("For")
+                print_board(step.board)
+                print(step.parent, step.previous_move, step.all_moves)
+                # add new artificially created step to open list
+                open_list.append(Step(step, direction, step.all_moves, sym))
+                print_board(open_list[1].board)
+                print(open_list[1].parent, open_list[1].previous_move, open_list[1].all_moves)
+            # check how many new steps there are
+            iteration_counter = iteration_counter + 1
+        # if there are all done then move the step from open to closed and move to the first from open list
+        if iteration_counter == len(posdirs):
+            closed_list[step] = step
+            step.move_step(posdirs[0], step.board, find_zero(step.board)[0],
+                           find_zero(step.board)[1])
+            open_list.pop(0)
+    # if len(step.all_moves) - 1 == DEPTH:
+    #     print('Depth reached, this is the end')
+    #     return None
+    return listToString(step.all_moves), len(listToString(step.all_moves))
 
 
 def dfs():
@@ -180,54 +191,42 @@ def getPossibleDirections(board, order):
     # top left corner
     if row == 0 and col == 0:
         result = [char for char in order if char not in "UL"]
-        # result = order.replace("U", '')
-        # result = result.replace("L", '')
         return result[0], result[1]
 
     # top right corner
     elif row == 0 and col == size_x - 1:
         result = [char for char in order if char not in "UR"]
-        # result = order.replace("U", '')
-        # result = result.replace("R", '')
         return result[0], result[1]
 
     # bottom right corner
     elif row == size_y - 1 and col == size_x - 1:
         result = [char for char in order if char not in "DR"]
-        # result = order.replace("D", '')
-        # result = result.replace("R", '')
         return result[0], result[1]
 
     # bottom left corner
     elif row == size_y - 1 and col == 0:
         result = [char for char in order if char not in "LD"]
-        # result = order.replace("L", '')
-        # result = result.replace("D", '')
         return result[0], result[1]
 
     # EDGES
     # top edge
     elif row == 0:
         result = [char for char in order if char not in "U"]
-        # result = order.replace("U", '')
         return result[0], result[1], result[2]
 
     # right edge
     elif col == size_x - 1:
         result = [char for char in order if char not in "R"]
-        # result = order.replace("R", '')
         return result[0], result[1], result[2]
 
     # bottom edge
     elif row == size_y - 1:
         result = [char for char in order if char not in "D"]
-        # result = order.replace("D", '')
         return result[0], result[1], result[2]
 
     # left edge
     elif col == 0:
         result = [char for char in order if char not in "L"]
-        # result = order.replace("L", '')
         return result[0], result[1], result[2]
 
     # MIDDLE
@@ -239,7 +238,7 @@ if __name__ == '__main__':
     moves = [0]
     # step_t = Step(None, None, moves, TARGET_STATE)
     # step_e = Step(None, None, moves, EXPERIMENTAL_STATE)
-    print(dfs())
-    # bfs()
+    # print(dfs())
+    bfs()
 
     # print(getPossibleDirections(step_e.board, ORDER))
