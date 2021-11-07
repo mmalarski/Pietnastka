@@ -108,7 +108,7 @@ def bfs():
     closed_list = {}  # for steps with all neighbours checked
     print('START')
     print_board(step.board)
-    while step.board != TARGET_STATE and len(step.all_moves) - 1 != DEPTH:
+    while step.board != TARGET_STATE:
         posdirs = [char for char in getPossibleDirections(step.board, ORDER)]
         iteration_counter = 0
         for direction in posdirs:
@@ -127,9 +127,11 @@ def bfs():
         # if there are all done then move the step from open to closed and move to the first from open list
         if iteration_counter == len(posdirs):
             closed_list[step] = step
-            step.move_step(posdirs[0], step.board, find_zero(step.board)[0],
-                           find_zero(step.board)[1])
             open_list.pop(0)
+            step = open_list[0]
+            #step.move_step(open_list[0].previous_move, step.board, find_zero(step.board)[0],
+                          # find_zero(step.board)[1])
+            #open_list.pop(0)
     # if len(step.all_moves) - 1 == DEPTH:
     #     print('Depth reached, this is the end')
     #     return None
