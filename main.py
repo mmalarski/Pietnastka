@@ -5,27 +5,29 @@ DEPTH = 100
 #                 [5, 6, 7, 8],
 #                 [9, 10, 11, 12],
 #                 [13, 14, 15, 0]]
-TARGET_STATE = [[1, 2],
-                [3, 0]]
+TARGET_STATE = [[1, 2, 3],
+                [4, 5, 6],
+                [7, 8, 0]]
 # INITIAL_STATE = [[1, 2, 3, 0],
 #                  [5, 6, 7, 4],
 #                  [9, 10, 11, 8],
 #                  [13, 14, 15, 12]]
-INITIAL_STATE = [[0, 2],
-                 [1, 3]]
+INITIAL_STATE = [[2, 0, 3],
+                 [1, 4, 6],
+                 [7, 5, 8]]
 EXPERIMENTAL_STATE = [[8, 15, 3, 0],
                       [5, 6, 4, 11],
                       [2, 9, 10, 12],
                       [1, 14, 7, 13]]
 # ORDER = "RDUL"
 # ORDER = "RDLU"
-ORDER = "DRUL"
+# ORDER = "DRUL"
 # ORDER = "DRUL"
 # ORDER = "DRLU"
 # ORDER = "LUDR"
 # ORDER = "LURD"
 # ORDER = "ULDR"
-# ORDER = "ULRD"
+ORDER = "ULRD"
 
 POS = [0, 0]
 
@@ -113,13 +115,9 @@ def bfs():
             sym = sym_move_step(direction, step.board, find_zero(step.board)[0],
                                 find_zero(step.board)[1])
             if sym not in [b.board for b in closed_list] and sym not in [b.board for b in open_list]:
-                print("For")
-                print_board(step.board)
-                print(step.parent, step.previous_move, step.all_moves)
                 # add new artificially created step to open list
-                open_list.append( Step(step, direction, step.all_moves.copy(), sym))
-                print_board(open_list[0].board)
-                print(open_list[0].parent, open_list[0].previous_move, open_list[0].all_moves)
+                open_list.append(Step(step, direction, step.all_moves.copy(), sym))
+                print(step.parent, step.previous_move, step.all_moves)
             # check how many new steps there are
             iteration_counter = iteration_counter + 1
         # if there are all done then move the step from open to closed and move to the first from open list
@@ -127,9 +125,6 @@ def bfs():
             closed_list[step] = step
             open_list.pop(0)
             step = open_list[0]
-            #step.move_step(open_list[0].previous_move, step.board, find_zero(step.board)[0],
-                          # find_zero(step.board)[1])
-            #open_list.pop(0)
     # if len(step.all_moves) - 1 == DEPTH:
     #     print('Depth reached, this is the end')
     #     return None
