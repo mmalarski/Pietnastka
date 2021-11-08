@@ -1,6 +1,6 @@
 from copy import deepcopy
 
-DEPTH = 100
+DEPTH = 20
 # TARGET_STATE = [[1, 2, 3, 4],
 #                 [5, 6, 7, 8],
 #                 [9, 10, 11, 12],
@@ -137,7 +137,15 @@ def dfs():
     closed_list = {}  # for steps with all neighbours checked
     print('START')
     print_board(step.board)
-    while (step.board != TARGET_STATE) and (len(step.all_moves) - 1 != DEPTH):
+    while step.board != TARGET_STATE and len(open_list) != 0:
+        if len(step.all_moves) - 1 == DEPTH:
+            print_board(step.board)
+            print(len(step.all_moves) - 1)
+            open_list.remove(step)
+            closed_list[step] = step
+            step = step.parent
+            print_board(step.board)
+            print(len(step.all_moves) - 1)
         posdirs = [char for char in getPossibleDirections(step.board, ORDER)]
         iteration_counter = 0
         for direction in posdirs:
@@ -147,7 +155,7 @@ def dfs():
                 if sym not in [b.board for b in closed_list]:  # child is not on closed list
                     step = step.move_step(direction, step.board, find_zero(step.board)[0],
                                           find_zero(step.board)[1])  # not on lists so we move
-                    print_board(step.board)
+                    # print_board(step.board)
                     open_list.append(step)  # adding current step to open_list
                     break  # getting out of for statement
             iteration_counter = iteration_counter + 1
@@ -155,7 +163,7 @@ def dfs():
             open_list.remove(step)
             closed_list[step] = step
             step = step.parent
-    if len(step.all_moves) - 1 == DEPTH:
+    if len(open_list) != 0:
         print('Depth reached, this is the end')
         return None
     return listToString(step.all_moves), len(listToString(step.all_moves))
@@ -234,6 +242,6 @@ if __name__ == '__main__':
     # step_t = Step(None, None, moves, TARGET_STATE)
     # step_e = Step(None, None, moves, EXPERIMENTAL_STATE)
     # print(dfs())
-    print(bfs())
+    print(dfs())
 
     # print(getPossibleDirections(step_e.board, ORDER))
