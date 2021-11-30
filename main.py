@@ -12,9 +12,9 @@ TARGET_STATE = [[1, 2, 3],
 #                  [5, 6, 7, 4],
 #                  [9, 10, 11, 8],
 #                  [13, 14, 15, 12]]
-INITIAL_STATE = [[2, 0, 3],
-                 [1, 4, 6],
-                 [7, 5, 8]]
+INITIAL_STATE = [[1, 2, 3],
+                 [4, 5, 6],
+                 [7, 0, 8]]
 EXPERIMENTAL_STATE = [[8, 15, 3, 0],
                       [5, 6, 4, 11],
                       [2, 9, 10, 12],
@@ -174,8 +174,15 @@ def list_to_string(s):
     return str1
 
 
-def a_star():
-    print('A*')
+def a_star_hamming():
+    step = Step(None, None, [], INITIAL_STATE)
+    open_list = [step]  # for steps that we stepped into
+    closed_list = {}  # for steps with all neighbours checked
+    while how_many_in_pos(step.board):
+        posdirs = [char for char in get_possible_directions(step.board, "LURD")]
+        for direction in posdirs:
+            sym = sym_move_step(direction, step.board, find_zero(step.board)[0],
+                                find_zero(step.board)[1])
 
 
 def print_board(board):
@@ -254,6 +261,7 @@ if __name__ == '__main__':
     # step_t = Step(None, None, moves, TARGET_STATE)
     # step_e = Step(None, None, moves, EXPERIMENTAL_STATE)
     # print(dfs())
-    print(dfs())
+    # print(dfs())
+    print("how_many_in_pos: ", how_many_in_pos(INITIAL_STATE))
 
     # print(getPossibleDirections(step_e.board, ORDER))
