@@ -176,7 +176,7 @@ def dfs():
 def list_to_string(s):
     str1 = ""
     for ele in s:
-        str1 += ele
+        str1 += str(ele)
     return str1
 
 
@@ -202,7 +202,47 @@ def a_star(variant):
         return list_to_string(step.all_moves), len(list_to_string(step.all_moves))
 
     elif variant == variants.MANHATTAN:
-        print("MANHATTAN")
+        step = Step(None, None, [], INITIAL_STATE)
+        open_list = [step]  # for steps that we stepped into
+        closed_list = {}  # for steps with all neighbours checked
+        # while not step.board == TARGET_STATE:
+        while not distance(step.board, TARGET_STATE) == 0:
+            counter = 0
+            index = 0
+            lowest_f = distance(open_list[0].board, TARGET_STATE) + len(open_list[0].all_moves)
+            for element in open_list:
+                if distance(element.board, TARGET_STATE) + len(element.all_moves) < lowest_f:
+                    lowest_f = distance(element.board, TARGET_STATE) + len(element.all_moves)
+                    index = counter
+                counter += 1
+            step = open_list[index]
+            if step.board == TARGET_STATE:
+                return list_to_string(step.all_moves), len(list_to_string(step.all_moves))
+            else:
+                closed_list[step] = step
+                open_list.remove(step)
+                posdirs = [char for char in get_possible_directions(step.board, "LURD")]
+                for direction in posdirs:
+                    sym = sym_move_step(direction, step.board, find_zero(step.board)[0],
+                                        find_zero(step.board)[1])  # board sym for the specific direction
+                    if sym not in [b.board for b in open_list]:  # child is not on open list
+                        if sym not in [b.board for b in closed_list]:  # child is not on closed list
+                            step = step.move_step(direction, step.board, find_zero(step.board)[0],
+                                                  find_zero(step.board)[1])  # not on lists so we move
+                            # print_board(step.board)
+                            open_list.append(step)  # adding current step to open_list
+                            break  # getting out of for statement
+                        # zle: closed lista przechowuje stepy a nie boardy a sym jest boardem
+                        # poza tym trzeba zmienic all moves w na closed liscie
+                        closed_list[sym].parent = step
+                    else:
+                        another_index = 0
+                        for elem in open_list:
+                            if elem.board == sym:
+                                break
+                            another_index += 1
+                        open_list[another_index].parent = step
+
 
 
 def print_board(board):
@@ -239,7 +279,6 @@ def distance(board1, board2):
     x, y = find_zero(board1)
     x_tar, y_tar = find_zero(board2)
     return abs(x - x_tar) + abs(y - y_tar)
-
 
 
 def get_possible_directions(board, order):
@@ -299,6 +338,9 @@ if __name__ == '__main__':
     # step_e = Step(None, None, moves, EXPERIMENTAL_STATE)
     # print(dfs())
     # print(dfs())
-    print(a_star(variants.HAMMING))
+
+    step = Step(None, None, [], INITIAL_STATE)
+    step.move_step("R",step.board,find_zero(step.board)[0], find_zero(step.board)[1])
+    print(vars(step))
 
     # print(getPossibleDirections(step_e.board, ORDER))
