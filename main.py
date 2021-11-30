@@ -184,11 +184,16 @@ def print_board(board):
     print()
 
 
-def is_board_the_same(board):
+def how_many_in_pos(board):
     count = 0
-    for i in range(len(board)):
-        if board[0] == TARGET_STATE[0]:
-            count = count + 1
+    k = 0
+    l = 0
+    for i in board:
+        for j in i:
+            if j == TARGET_STATE[k][l]:
+                count = count + 1
+                l = l + 1
+        l = 0
     return count
 
 
