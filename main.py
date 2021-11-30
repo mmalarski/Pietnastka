@@ -13,9 +13,12 @@ TARGET_STATE = [[1, 2, 3],
 #                  [5, 6, 7, 4],
 #                  [9, 10, 11, 8],
 #                  [13, 14, 15, 12]]
-INITIAL_STATE = [[2, 0, 3],
-                 [1, 5, 6],
-                 [4, 7, 8]]
+# INITIAL_STATE = [[2, 0, 3],
+#                  [1, 5, 6],
+#                  [4, 7, 8]]
+INITIAL_STATE = [[1, 2, 3],
+                 [4, 7, 6],
+                 [0, 5, 8]]
 EXPERIMENTAL_STATE = [[8, 15, 3, 0],
                       [5, 6, 4, 11],
                       [2, 9, 10, 12],
@@ -85,6 +88,16 @@ def find_zero(board):
     for row in range(len(board)):
         for column in range(len(board[row])):
             if board[row][column] == 0:
+                x = row
+                y = column
+    return x, y
+
+
+def find_value(board, value):
+    x, y = None, None
+    for row in range(len(board)):
+        for column in range(len(board[row])):
+            if board[row][column] == value:
                 x = row
                 y = column
     return x, y
@@ -231,7 +244,6 @@ def a_star(variant):
                                                   find_zero(step.board)[1])  # not on lists so we move
                             # print_board(step.board)
                             open_list.append(step)  # adding current step to open_list
-                            break  # getting out of for statement
                         # zle: closed lista przechowuje stepy a nie boardy a sym jest boardem
                         # poza tym trzeba zmienic all moves w na closed liscie
                         closed_list[sym].parent = step
@@ -242,7 +254,6 @@ def a_star(variant):
                                 break
                             another_index += 1
                         open_list[another_index].parent = step
-
 
 
 def print_board(board):
@@ -279,6 +290,16 @@ def distance(board1, board2):
     x, y = find_zero(board1)
     x_tar, y_tar = find_zero(board2)
     return abs(x - x_tar) + abs(y - y_tar)
+
+
+def distance_manhattan(board):
+    distance_result = 0
+    for i in range(len(board)):
+        for j in range(len(board[0])):
+            if board[i][j] != 0:
+                x, y = divmod(board[i][j] - 1, len(TARGET_STATE[0]))
+                distance_result += abs(x - i) + abs(y - j)
+    return distance_result
 
 
 def get_possible_directions(board, order):
@@ -339,8 +360,6 @@ if __name__ == '__main__':
     # print(dfs())
     # print(dfs())
 
-    step = Step(None, None, [], INITIAL_STATE)
-    step.move_step("R",step.board,find_zero(step.board)[0], find_zero(step.board)[1])
-    print(vars(step))
+    print(distance_manhattan(INITIAL_STATE))
 
     # print(getPossibleDirections(step_e.board, ORDER))
