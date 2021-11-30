@@ -109,7 +109,7 @@ def bfs():
     print('START')
     print_board(step.board)
     while step.board != TARGET_STATE:
-        posdirs = [char for char in getPossibleDirections(step.board, ORDER)]
+        posdirs = [char for char in get_possible_directions(step.board, ORDER)]
         iteration_counter = 0
         for direction in posdirs:
             sym = sym_move_step(direction, step.board, find_zero(step.board)[0],
@@ -128,7 +128,7 @@ def bfs():
     # if len(step.all_moves) - 1 == DEPTH:
     #     print('Depth reached, this is the end')
     #     return None
-    return listToString(step.all_moves), len(listToString(step.all_moves))
+    return list_to_string(step.all_moves), len(list_to_string(step.all_moves))
 
 
 def dfs():
@@ -145,7 +145,7 @@ def dfs():
             closed_list[step] = step
             step = step.parent
             continue
-        posdirs = [char for char in getPossibleDirections(step.board, ORDER)]
+        posdirs = [char for char in get_possible_directions(step.board, ORDER)]
         for direction in posdirs:
             sym = sym_move_step(direction, step.board, find_zero(step.board)[0],
                                 find_zero(step.board)[1])  # board sym for the specific direction
@@ -164,10 +164,10 @@ def dfs():
     if len(open_list) != 0:
         print('Depth reached, this is the end')
         return None
-    return listToString(step.all_moves), len(listToString(step.all_moves))
+    return list_to_string(step.all_moves), len(list_to_string(step.all_moves))
 
 
-def listToString(s):
+def list_to_string(s):
     str1 = ""
     for ele in s:
         str1 += ele
@@ -192,8 +192,7 @@ def is_board_the_same(board):
     return count
 
 
-
-def getPossibleDirections(board, order):
+def get_possible_directions(board, order):
     row, col = find_zero(board)
     size_x, size_y = len(board[0]), len(board)
 
