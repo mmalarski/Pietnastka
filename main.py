@@ -192,7 +192,7 @@ def how_many_in_pos(board):
         for j in i:
             if j == TARGET_STATE[k][l]:
                 count = count + 1
-                l = l + 1
+            l = l + 1
         l = 0
     return count
 
