@@ -138,16 +138,14 @@ def dfs():
     print('START')
     print_board(step.board)
     while step.board != TARGET_STATE and len(open_list) != 0:
+        print(len(open_list))
+        iteration_counter = 0
         if len(step.all_moves) - 1 == DEPTH:
-            print_board(step.board)
-            print(len(step.all_moves) - 1)
             open_list.remove(step)
             closed_list[step] = step
             step = step.parent
-            print_board(step.board)
-            print(len(step.all_moves) - 1)
+            continue
         posdirs = [char for char in getPossibleDirections(step.board, ORDER)]
-        iteration_counter = 0
         for direction in posdirs:
             sym = sym_move_step(direction, step.board, find_zero(step.board)[0],
                                 find_zero(step.board)[1])  # board sym for the specific direction
@@ -184,6 +182,15 @@ def print_board(board):
     for row in board:
         print(row)
     print()
+
+
+def is_board_the_same(board):
+    count = 0
+    for i in range(len(board)):
+        if board[0] == TARGET_STATE[0]:
+            count = count + 1
+    return count
+
 
 
 def getPossibleDirections(board, order):
