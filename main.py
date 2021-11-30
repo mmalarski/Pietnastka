@@ -235,9 +235,9 @@ def all_positions_good(board):
     return count == result
 
 
-def distance(board):
-    x, y = find_zero(board)
-    x_tar, y_tar = find_zero(TARGET_STATE)
+def distance(board1, board2):
+    x, y = find_zero(board1)
+    x_tar, y_tar = find_zero(board2)
     return abs(x - x_tar) + abs(y - y_tar)
 
 
