@@ -235,6 +235,13 @@ def all_positions_good(board):
     return count == result
 
 
+def distance(board):
+    x, y = find_zero(board)
+    x_tar, y_tar = find_zero(TARGET_STATE)
+    return abs(x - x_tar) + abs(y - y_tar)
+
+
+
 def get_possible_directions(board, order):
     row, col = find_zero(board)
     size_x, size_y = len(board[0]), len(board)
