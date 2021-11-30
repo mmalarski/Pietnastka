@@ -194,6 +194,7 @@ def how_many_in_pos(board):
                 count = count + 1
             l = l + 1
         l = 0
+        k = k + 1
     return count
 
 
