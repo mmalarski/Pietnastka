@@ -178,7 +178,7 @@ def a_star_hamming():
     step = Step(None, None, [], INITIAL_STATE)
     open_list = [step]  # for steps that we stepped into
     closed_list = {}  # for steps with all neighbours checked
-    while how_many_in_pos(step.board):
+    while all_positions_good(step.board):
         posdirs = [char for char in get_possible_directions(step.board, "LURD")]
         for direction in posdirs:
             sym = sym_move_step(direction, step.board, find_zero(step.board)[0],
@@ -203,6 +203,16 @@ def how_many_in_pos(board):
         l = 0
         k = k + 1
     return count
+
+
+def all_positions_good(board):
+    count = how_many_in_pos(board)
+
+    result = 0
+    for i in TARGET_STATE:
+        for j in i:
+            result = result + 1
+    return count == result
 
 
 def get_possible_directions(board, order):
