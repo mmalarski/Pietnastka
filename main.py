@@ -1,3 +1,4 @@
+import collections
 from copy import deepcopy
 from enum import Enum
 
@@ -13,12 +14,9 @@ TARGET_STATE = [[1, 2, 3],
 #                  [5, 6, 7, 4],
 #                  [9, 10, 11, 8],
 #                  [13, 14, 15, 12]]
-# INITIAL_STATE = [[2, 0, 3],
-#                  [1, 5, 6],
-#                  [4, 7, 8]]
-INITIAL_STATE = [[1, 2, 3],
-                 [4, 7, 6],
-                 [0, 5, 8]]
+INITIAL_STATE = [[2, 0, 3],
+                 [1, 5, 6],
+                 [4, 7, 8]]
 EXPERIMENTAL_STATE = [[8, 15, 3, 0],
                       [5, 6, 4, 11],
                       [2, 9, 10, 12],
@@ -49,6 +47,10 @@ class Step:
         self.board = board
         if previous_move is not None:
             self.all_moves.append(previous_move)
+
+    @property
+    def f(self):
+        return len(self.all_moves) + distance_manhattan(self.board)
 
     def create_next_step(self, move, new_board):
         next_step = Step(self, move, self.all_moves, new_board)
@@ -217,43 +219,54 @@ def a_star(variant):
     elif variant == variants.MANHATTAN:
         step = Step(None, None, [], INITIAL_STATE)
         open_list = [step]  # for steps that we stepped into
-        closed_list = {}  # for steps with all neighbours checked
+        closed_list = set()  # for steps with all neighbours checked
+        closed_list.add(step)
         # while not step.board == TARGET_STATE:
-        while not distance(step.board, TARGET_STATE) == 0:
-            counter = 0
-            index = 0
-            lowest_f = distance(open_list[0].board, TARGET_STATE) + len(open_list[0].all_moves)
-            for element in open_list:
-                if distance(element.board, TARGET_STATE) + len(element.all_moves) < lowest_f:
-                    lowest_f = distance(element.board, TARGET_STATE) + len(element.all_moves)
-                    index = counter
-                counter += 1
-            step = open_list[index]
+        # while not distance(step.board, TARGET_STATE) == 0:
+        #     counter = 0
+        #     index = 0
+        #     lowest_f = distance(open_list[0].board, TARGET_STATE) + len(open_list[0].all_moves)
+        #     for element in open_list:
+        #         if distance(element.board, TARGET_STATE) + len(element.all_moves) < lowest_f:
+        #             lowest_f = distance(element.board, TARGET_STATE) + len(element.all_moves)
+        #             index = counter
+        #         counter += 1
+        #     step = open_list[index]
+        #     if step.board == TARGET_STATE:
+        #         return list_to_string(step.all_moves), len(list_to_string(step.all_moves))
+        #     else:
+        #         closed_list[step] = step
+        #         open_list.remove(step)
+        #         posdirs = [char for char in get_possible_directions(step.board, "LURD")]
+        #         for direction in posdirs:
+        #             sym = sym_move_step(direction, step.board, find_zero(step.board)[0],
+        #                                 find_zero(step.board)[1])  # board sym for the specific direction
+        #             if sym not in [b.board for b in open_list]:  # child is not on open list
+        #                 if sym not in [b.board for b in closed_list]:  # child is not on closed list
+        #                     step = step.move_step(direction, step.board, find_zero(step.board)[0],
+        #                                           find_zero(step.board)[1])  # not on lists so we move
+        #                     # print_board(step.board)
+        #                     open_list.append(step)  # adding current step to open_list
+        #                 # zle: closed lista przechowuje stepy a nie boardy a sym jest boardem
+        #                 # poza tym trzeba zmienic all moves w na closed liscie
+        #                 closed_list[sym].parent = step
+        #             else:
+        #                 another_index = 0
+        #                 for elem in open_list:
+        #                     if elem.board == sym:
+        #                         break
+        #                     another_index += 1
+        #                 open_list[another_index].parent = step
+        while open_list:
+            open_list = collections.deque(sorted(list(open_list), key=lambda elem: elem.f))
+            step = open_list.popleft()
             if step.board == TARGET_STATE:
                 return list_to_string(step.all_moves), len(list_to_string(step.all_moves))
-            else:
-                closed_list[step] = step
-                open_list.remove(step)
-                posdirs = [char for char in get_possible_directions(step.board, "LURD")]
-                for direction in posdirs:
-                    sym = sym_move_step(direction, step.board, find_zero(step.board)[0],
-                                        find_zero(step.board)[1])  # board sym for the specific direction
-                    if sym not in [b.board for b in open_list]:  # child is not on open list
-                        if sym not in [b.board for b in closed_list]:  # child is not on closed list
-                            step = step.move_step(direction, step.board, find_zero(step.board)[0],
-                                                  find_zero(step.board)[1])  # not on lists so we move
-                            # print_board(step.board)
-                            open_list.append(step)  # adding current step to open_list
-                        # zle: closed lista przechowuje stepy a nie boardy a sym jest boardem
-                        # poza tym trzeba zmienic all moves w na closed liscie
-                        closed_list[sym].parent = step
-                    else:
-                        another_index = 0
-                        for elem in open_list:
-                            if elem.board == sym:
-                                break
-                            another_index += 1
-                        open_list[another_index].parent = step
+            for direction in [char for char in get_possible_directions(step.board, "LURD")]:
+                child = step.move_step(direction, step.board, find_zero(step.board)[0], find_zero(step.board)[1])
+                if child.board not in [b.board for b in closed_list]:
+                    open_list.append(child)
+                    closed_list.add(child)
 
 
 def print_board(board):
@@ -360,6 +373,6 @@ if __name__ == '__main__':
     # print(dfs())
     # print(dfs())
 
-    print(distance_manhattan(INITIAL_STATE))
+    print(a_star(variants.MANHATTAN))
 
     # print(getPossibleDirections(step_e.board, ORDER))
