@@ -14,9 +14,9 @@ TARGET_STATE = [[1, 2, 3],
 #                  [5, 6, 7, 4],
 #                  [9, 10, 11, 8],
 #                  [13, 14, 15, 12]]
-INITIAL_STATE = [[1, 3, 6],
-                 [4, 2, 0],
-                 [7, 5, 8]]
+INITIAL_STATE = [[1, 2, 3],
+                 [4, 5, 0],
+                 [7, 8, 6]]
 EXPERIMENTAL_STATE = [[8, 15, 3, 0],
                       [5, 6, 4, 11],
                       [2, 9, 10, 12],
@@ -158,15 +158,19 @@ def dfs():
     closed_list = {}  # for steps with all neighbours checked
     print('START')
     print_board(step.board)
-    while step.board != TARGET_STATE and len(open_list) != 0:
+    while len(open_list) != 0 and step.board != TARGET_STATE:
         print(len(open_list))
+        print("closed: ", len(closed_list))
         iteration_counter = 0
         if len(step.all_moves) - 1 == DEPTH:
             open_list.remove(step)
             closed_list[step] = step
+            if step.parent is None:
+                return -1
             step = step.parent
             continue
         posdirs = [char for char in get_possible_directions(step.board, ORDER)]
+        print("posdirs: ", len(posdirs))
         for direction in posdirs:
             sym = sym_move_step(direction, step.board, find_zero(step.board)[0],
                                 find_zero(step.board)[1])  # board sym for the specific direction
@@ -177,15 +181,43 @@ def dfs():
                     # print_board(step.board)
                     open_list.append(step)  # adding current step to open_list
                     break  # getting out of for statement
-            iteration_counter = iteration_counter + 1
+                iteration_counter = iteration_counter + 1
+            else:
+                step = step.move_step(direction, step.board, find_zero(step.board)[0],
+                                          find_zero(step.board)[1])
+                break
         if iteration_counter == len(posdirs):
             open_list.remove(step)
             closed_list[step] = step
+            if step.parent is None:
+                return -1
             step = step.parent
     if len(open_list) != 0:
         print('Depth reached, this is the end')
-        return None
-    return list_to_string(step.all_moves), len(list_to_string(step.all_moves))
+        return -1
+    else:
+        return list_to_string(step.all_moves), len(list_to_string(step.all_moves))
+
+
+def dfs2():
+    step = Step(None, None, [], INITIAL_STATE)
+    open_list = [step]
+    closed_list = set()
+    while open_list:
+        step1 = open_list.pop()
+        closed_list.add(tuple(step1.board))
+        if step1.board == TARGET_STATE:
+            return list_to_string(step.all_moves), len(list_to_string(step.all_moves))
+        posdirs = [char for char in get_possible_directions(step1.board, ORDER)]
+        for direction in posdirs:
+            step2 = deepcopy(step1)
+            step2 = step2.move_step(direction, step2.board, find_zero(step2.board)[0],
+                                  find_zero(step2.board)[1])
+            if tuple(step2.board) not in closed_list:
+                open_list.append(step2)
+                closed_list.add(tuple(step2.board))
+
+
 
 
 def list_to_string(s):
@@ -337,7 +369,7 @@ if __name__ == '__main__':
     # step_e = Step(None, None, moves, EXPERIMENTAL_STATE)
     # print(dfs())
     # print(dfs())
-
-    print(a_star(variants.MANHATTAN))
+    visited = set()
+    print(dfs2())
 
     # print(getPossibleDirections(step_e.board, ORDER))
