@@ -181,7 +181,9 @@ def dfs():
                     # print_board(step.board)
                     open_list.append(step)  # adding current step to open_list
                     break  # getting out of for statement
-
+            else:
+                step = open_list[(open_list.index(step))]
+                break
             iteration_counter = iteration_counter + 1
         if iteration_counter == len(posdirs):
             open_list.remove(step)
