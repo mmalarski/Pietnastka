@@ -2,7 +2,7 @@ import collections
 from copy import deepcopy
 from enum import Enum
 
-DEPTH = 20
+DEPTH = 9
 TARGET_STATE = [[1, 2, 3, 4],
                 [5, 6, 7, 8],
                 [9, 10, 11, 12],
@@ -11,9 +11,9 @@ TARGET_STATE = [[1, 2, 3, 4],
 #                 [4, 5, 6],
 #                 [7, 8, 0]]
 INITIAL_STATE = [[1, 2, 3, 4],
-                 [5, 0, 6, 7],
-                 [10, 13, 11, 8],
-                 [9, 14, 15, 12]]
+                 [5, 6, 7, 8],
+                 [13, 9, 11, 12],
+                 [0, 10, 14, 15]]
 # INITIAL_STATE = [[1, 2, 3],
 #                  [4, 6, 8],
 #                  [7, 0, 5]]
@@ -25,14 +25,14 @@ EXPERIMENTAL_STATE = [[8, 15, 3, 0],
                       [5, 6, 4, 11],
                       [2, 9, 10, 12],
                       [1, 14, 7, 13]]
-ORDER = "RDUL"
+# ORDER = "RDUL"
 # ORDER = "RDLU"
 # ORDER = "DRUL"
 # ORDER = "DRUL"
 # ORDER = "DRLU"
 # ORDER = "LUDR"
 # ORDER = "LURD"
-# ORDER = "ULDR"
+ORDER = "ULDR"
 # ORDER = "ULRD"
 
 POS = [0, 0]
@@ -133,7 +133,13 @@ def bfs():
     closed_list = {}  # for steps with all neighbours checked
     print('START')
     # print_board(step.board)
+    timer_counter = 0
     while step.board != TARGET_STATE:
+
+        timer_counter += 1
+        if timer_counter % 100000 == 0:
+            print(f"{timer_counter / 100000}. calculating...")
+
         posdirs = [char for char in get_possible_directions(step.board, ORDER)]
         iteration_counter = 0
         for direction in posdirs:
@@ -162,7 +168,13 @@ def dfs():
     closed_list = {}  # for steps with all neighbours checked
     print('START')
     print_board(step.board)
+    timer_counter = 0
     while len(open_list) != 0 and step.board != TARGET_STATE:
+
+        timer_counter += 1
+        if timer_counter % 100000 == 0:
+            print(f"{timer_counter / 100000}. calculating...")
+
         iteration_counter = 0
         if len(step.all_moves) == DEPTH:
             open_list.remove(step)
@@ -172,25 +184,25 @@ def dfs():
             continue
         posdirs = [char for char in get_possible_directions(step.board, ORDER)]
         for direction in posdirs:
-            sym = sym_move_step(direction, step.board, find_zero(step.board)[0],
-                                find_zero(step.board)[1])  # board sym for the specific direction
-            if sym not in [b.board for b in open_list]:  # child is not on open list
-                if sym not in [b.board for b in closed_list]:  # child is not on closed list
+            # sym = sym_move_step(direction, step.board, find_zero(step.board)[0],
+            #                     find_zero(step.board)[1])  # board sym for the specific direction
+            temp = deepcopy(step.all_moves)
+            temp.append(direction)
+            if temp not in [b.all_moves for b in closed_list]:  # child is not on closed list
+                if temp not in [b.all_moves for b in open_list]:  # child is not on open list
                     step = step.move_step(direction, step.board, find_zero(step.board)[0],
                                           find_zero(step.board)[1])  # not on lists so we move
                     # print_board(step.board)
                     open_list.append(step)  # adding current step to open_list
                     break  # getting out of for statement
-            else:
-                step = open_list[(open_list.index(step))]
-                break
+
             iteration_counter = iteration_counter + 1
         if iteration_counter == len(posdirs):
             open_list.remove(step)
             closed_list[step] = step
             # tu nie przechodzimy do kolejnych dzieci roota tylko konczymy program co jest bledne
-            if step.parent is None:
-                return -1
+            # if step.parent is None:
+            #     return -1
             step = step.parent
         # if len(open_list) != 0:
         #     print('Depth reached, this is the end')
