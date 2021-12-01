@@ -228,7 +228,7 @@ def dfs():
     return list_to_string(step.all_moves), len(list_to_string(step.all_moves))
 
 
-def DFS_iterative():
+def dfs_iterative():
     step = Step(None, None, [], INITIAL_STATE)
     open_list = [step]
     while open_list:
@@ -418,7 +418,7 @@ if __name__ == '__main__':
     # step_e = Step(None, None, moves, EXPERIMENTAL_STATE)
     # print(bfs())
     # print(dfs())
-    print(DFS_iterative())
+    print(dfs_iterative())
 
     # print(a_star(variants.MANHATTAN))
 
