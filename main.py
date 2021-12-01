@@ -244,6 +244,31 @@ def DFS_iterative():
                     open_list.append(step1)
 
 
+def dfs2():
+    state = Step(None, None, [], INITIAL_STATE)
+    open_list = [state]
+    closed_list = set()
+    while len(open_list) != 0 and len(state.all_moves) < DEPTH:
+        state = open_list.pop()
+        print_board(state.board)
+        closed_list.add(state)
+        if state.board == TARGET_STATE:
+            break
+        for direction in [char for char in get_possible_directions(state.board, ORDER)]:
+            sym = sym_move_step(direction, state.board, find_zero(state.board)[0],
+                                find_zero(state.board)[1])
+            step2 = Step(state, direction, state.all_moves.copy(), sym)
+            if step2.all_moves not in [b.all_moves for b in closed_list]:
+                open_list.append(step2)
+                closed_list.add(step2)
+    if len(state.all_moves) < DEPTH:
+        return -1
+    elif len(state.all_moves) < DEPTH:
+        print(len(open_list))
+    else:
+        return list_to_string(state.all_moves), len(list_to_string(state.all_moves))
+
+
 def list_to_string(s):
     str1 = ""
     for ele in s:
