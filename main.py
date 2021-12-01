@@ -3,25 +3,29 @@ from copy import deepcopy
 from enum import Enum
 
 DEPTH = 20
-# TARGET_STATE = [[1, 2, 3, 4],
-#                 [5, 6, 7, 8],
-#                 [9, 10, 11, 12],
-#                 [13, 14, 15, 0]]
-TARGET_STATE = [[1, 2, 3],
-                [4, 5, 6],
-                [7, 8, 0]]
-# INITIAL_STATE = [[1, 2, 3, 0],
-#                  [5, 6, 7, 4],
-#                  [9, 10, 11, 8],
-#                  [13, 14, 15, 12]]
-INITIAL_STATE = [[1, 3, 6],
-                 [4, 2, 0],
-                 [7, 5, 8]]
+TARGET_STATE = [[1, 2, 3, 4],
+                [5, 6, 7, 8],
+                [9, 10, 11, 12],
+                [13, 14, 15, 0]]
+# TARGET_STATE = [[1, 2, 3],
+#                 [4, 5, 6],
+#                 [7, 8, 0]]
+INITIAL_STATE = [[1, 2, 3, 4],
+                 [5, 0, 6, 7],
+                 [10, 13, 11, 8],
+                 [9, 14, 15, 12]]
+# INITIAL_STATE = [[1, 2, 3],
+#                  [4, 6, 8],
+#                  [7, 0, 5]]
+
+# INITIAL_STATE = [[1, 2, 3],
+#                  [4, 5, 6],
+#                  [7, 0, 8]]
 EXPERIMENTAL_STATE = [[8, 15, 3, 0],
                       [5, 6, 4, 11],
                       [2, 9, 10, 12],
                       [1, 14, 7, 13]]
-# ORDER = "RDUL"
+ORDER = "RDUL"
 # ORDER = "RDLU"
 # ORDER = "DRUL"
 # ORDER = "DRUL"
@@ -29,7 +33,7 @@ EXPERIMENTAL_STATE = [[8, 15, 3, 0],
 # ORDER = "LUDR"
 # ORDER = "LURD"
 # ORDER = "ULDR"
-ORDER = "ULRD"
+# ORDER = "ULRD"
 
 POS = [0, 0]
 
@@ -53,7 +57,7 @@ class Step:
         return len(self.all_moves) + distance_manhattan(self.board)
 
     def create_next_step(self, move, new_board):
-        next_step = Step(self, move, self.all_moves, new_board)
+        next_step = Step(self, move, deepcopy(self.all_moves), new_board)
         return next_step
 
     def move_step(self, move, board_state, x, y):
@@ -128,7 +132,7 @@ def bfs():
     open_list = [step]  # for steps that we stepped into
     closed_list = {}  # for steps with all neighbours checked
     print('START')
-    print_board(step.board)
+    # print_board(step.board)
     while step.board != TARGET_STATE:
         posdirs = [char for char in get_possible_directions(step.board, ORDER)]
         iteration_counter = 0
@@ -158,12 +162,12 @@ def dfs():
     closed_list = {}  # for steps with all neighbours checked
     print('START')
     print_board(step.board)
-    while step.board != TARGET_STATE and len(open_list) != 0:
-        print(len(open_list))
+    while len(open_list) != 0 and step.board != TARGET_STATE:
         iteration_counter = 0
-        if len(step.all_moves) - 1 == DEPTH:
+        if len(step.all_moves) == DEPTH:
             open_list.remove(step)
             closed_list[step] = step
+            # bledne wracanie do parenta: lista moves zostaje z dziecka, nie odejmowany jest ostatni móve
             step = step.parent
             continue
         posdirs = [char for char in get_possible_directions(step.board, ORDER)]
@@ -177,15 +181,34 @@ def dfs():
                     # print_board(step.board)
                     open_list.append(step)  # adding current step to open_list
                     break  # getting out of for statement
+
             iteration_counter = iteration_counter + 1
         if iteration_counter == len(posdirs):
             open_list.remove(step)
             closed_list[step] = step
+            # tu nie przechodzimy do kolejnych dzieci roota tylko konczymy program co jest bledne
+            if step.parent is None:
+                return -1
             step = step.parent
-    if len(open_list) != 0:
-        print('Depth reached, this is the end')
-        return None
+        # if len(open_list) != 0:
+        #     print('Depth reached, this is the end')
+        #     return -1
+        # print_board(step.board)
     return list_to_string(step.all_moves), len(list_to_string(step.all_moves))
+
+
+def dfs_recursive(visited, step):
+    if len(step.all_moves) == DEPTH:
+        step1 = deepcopy(step)
+        step1 = step.parent
+        dfs_recursive(visited, step1)
+    if step not in visited:
+        # print_board(step.board)
+        visited.add(step)
+        for direction in [char for char in get_possible_directions(step.board, "LURD")]:
+            step1 = deepcopy(step)
+            step1 = step.move_step(direction, step.board, find_zero(step.board)[0], find_zero(step.board)[1])
+            dfs_recursive(visited, step1)
 
 
 def list_to_string(s):
@@ -335,9 +358,9 @@ if __name__ == '__main__':
     moves = [0]
     # step_t = Step(None, None, moves, TARGET_STATE)
     # step_e = Step(None, None, moves, EXPERIMENTAL_STATE)
-    # print(dfs())
-    # print(dfs())
+    print(dfs())
+    # print(bfs())
 
-    print(a_star(variants.MANHATTAN))
+    # print(a_star(variants.MANHATTAN))
 
     # print(getPossibleDirections(step_e.board, ORDER))
