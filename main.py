@@ -254,24 +254,16 @@ def DFS_iterative(order, init_state, t_state):
         if closed_list.get(step.board_string) is None:
             if step.board == t_state:
                 return str(len(list_to_string(step.all_moves))), list_to_string(step.all_moves)
-            closed_list[step.board_string] = step.board_string
+            closed_list[step.board_string] = step.all_moves
             if len(step.all_moves) != DEPTH:
                 for direction in reversed(get_possible_directions(step.board, order)):
-                    if len(step.all_moves) == 1:
-                        print(get_possible_directions(step.board, order))
                     child = deepcopy(step)
                     child = child.move_step(direction, step.board, find_zero(step.board)[0], find_zero(step.board)[1])
                     if closed_list.get(child.board_string) is None:
                         open_list.append(child)
-        # if not step.isRoot and step.all_moves[0] == "U":
-        # print(open_list[0].all_moves)
-        # print_board(open_list[0].board)
-        # print('\n')
-        # print(open_list[1].all_moves)
-        # print_board(open_list[1].board)
-        # print('\n')
-        # break
-
+                    elif len(closed_list.get(child.board_string)) > len(child.all_moves):
+                        open_list.append(child)
+                        closed_list.pop(child.board_string)
 
 
 def list_to_string(s):
@@ -502,5 +494,5 @@ if __name__ == '__main__':
                      [0, 10, 14, 15]]
 
     print(DFS_iterative(ORDER, initial_state, tar_state))
-
+    # print("hello" < "it's me I was wondering if ...")
 # print(getPossibleDirections(step_e.board, ORDER))
