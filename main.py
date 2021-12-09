@@ -4,23 +4,23 @@ from enum import Enum
 import sys
 
 DEPTH = 20
-# TARGET_STATE = [[1, 2, 3, 4],
-#                 [5, 6, 7, 8],
-#                 [9, 10, 11, 12],
-#                 [13, 14, 15, 0]]
 TARGET_STATE = [[1, 2, 3, 4],
                 [5, 6, 7, 8],
-                [9, 10, 11, 0]]
+                [9, 10, 11, 12],
+                [13, 14, 15, 0]]
+# TARGET_STATE = [[1, 2, 3, 4],
+#                 [5, 6, 7, 8],
+#                 [9, 10, 11, 0]]
 # TARGET_STATE = [[1, 2, 3],
 #                 [4, 5, 6],
 #                 [7, 8, 0]]
-# INITIAL_STATE = [[1, 2, 3, 4],
-#                  [5, 6, 7, 8],
-#                  [13, 9, 11, 12],
-#                  [0, 10, 14, 15]]
-INITIAL_STATE = [[1, 0, 2, 4],
-                 [5, 7, 3, 8],
-                 [9, 6, 10, 11]]
+INITIAL_STATE = [[1, 2, 3, 4],
+                 [5, 6, 7, 8],
+                 [13, 9, 11, 12],
+                 [0, 10, 14, 15]]
+# INITIAL_STATE = [[1, 0, 2, 4],
+#                  [5, 7, 3, 8],
+#                  [9, 6, 10, 11]]
 # INITIAL_STATE = [[1, 2, 3],
 #                  [4, 6, 8],
 #                  [7, 0, 5]]
@@ -62,8 +62,12 @@ class Step:
             self.all_moves.append(previous_move)
 
     @property
-    def f(self):
+    def f_m(self):
         return len(self.all_moves) + distance_manhattan(self.board)
+
+    @property
+    def f_h(self):
+        return how_many_in_pos(self.board)
 
     def mark_discovered(self):
         self.discovered = True
@@ -259,39 +263,30 @@ def list_to_string(s):
 
 
 def a_star(variant, init_state, t_state):
+    global TARGET_STATE
+    print_board(TARGET_STATE)
+    TARGET_STATE = t_state
+    print_board(TARGET_STATE)
     step = Step(None, None, [], init_state)
     open_list = [step]  # for steps that we stepped into
     closed_list = set()  # for steps with all neighbours checked
     closed_list.add(step)
-    if variant == "hamm":
-        while not all_positions_good(step.board):
-            posdirs = get_possible_directions(step.board, "LURD")
-            good_positions_count = []
-            for direction in posdirs:
-                sym = sym_move_step(direction,
-                                    step.board,
-                                    find_zero(step.board)[0],
-                                    find_zero(step.board)[1])
-                good_positions_count.append(how_many_in_pos(sym))
-            # move step to the direction corresponding to the index of max value in good positions count array
-            step = step.move_step(posdirs[good_positions_count.index(max(good_positions_count))],
-                                  step.board,
-                                  find_zero(step.board)[0],
-                                  find_zero(step.board)[1])
-        return str(len(list_to_string(step.all_moves))), list_to_string(step.all_moves)
-
-    elif variant == "manh":
-        while open_list:
-            open_list = collections.deque(sorted(list(open_list), key=lambda elem: elem.f))
-            step = open_list.popleft()
-            if step.board == t_state:
-                return str(len(list_to_string(step.all_moves))), list_to_string(step.all_moves)
-            for direction in get_possible_directions(step.board, "LURD"):
-                child = deepcopy(step)
-                child = child.move_step(direction, step.board, find_zero(step.board)[0], find_zero(step.board)[1])
-                if child.board not in [b.board for b in closed_list]:
-                    open_list.append(child)
-                    closed_list.add(child)
+    while open_list:
+        if variant == "manh":
+            open_list = collections.deque(sorted(list(open_list), key=lambda elem: elem.f_m))
+        elif variant == "hamm":
+            open_list = collections.deque(sorted(list(open_list), key=lambda elem: elem.f_h, reverse=True))
+        else:
+            print("Wrong variant in astar.")
+        step = open_list.popleft()
+        if step.board == t_state:
+            return str(len(list_to_string(step.all_moves))), list_to_string(step.all_moves)
+        for direction in get_possible_directions(step.board, "LURD"):
+            child = deepcopy(step)
+            child = child.move_step(direction, step.board, find_zero(step.board)[0], find_zero(step.board)[1])
+            if child.board not in [b.board for b in closed_list]:
+                open_list.append(child)
+                closed_list.add(child)
 
 
 def print_board(board):
@@ -409,67 +404,76 @@ def convert_to_boards(text):
 
 
 if __name__ == '__main__':
-#     #  [0]name.py [1]algorithm [2]ORDER/variant [3]initial state [4]output file solution [5]output file with statistics
-#     if len(sys.argv) == 6:
-#         file = open(f"układy/4x4/{sys.argv[3]}")
-#         initial_state, target_state = convert_to_boards(file.readlines())
-#         file.close()
-#
-#         if sys.argv[1] == "bfs" or sys.argv[1] == "dfs":
-#             if sys.argv[2] not in ["RDUL", "RDLU", "DRUL", "DRUL", "DRLU", "LUDR", "LURD", "ULDR", "ULRD"]:
-#                 print("Podaj odpowiedni porzadek przeszukiwania (ORDER)")
-#             else:
-#                 if sys.argv[1] == "bfs":
-#                     length, solution = bfs(sys.argv[2], initial_state, target_state)
-#                     solution_file = open(sys.argv[4], "w")
-#                     statistics_file = open(sys.argv[5], "w")
-#                     solution_file.writelines([length, '\n', solution])
-#                     statistics_file.writelines([length, '\n', "liczba stanow odwiedzonych", '\n', "liczba stanow "
-#                                                                                                   "przetworzonych",
-#                                                 '\n', "maksymalna głębokość rekursji", '\n', "czas trwania procesu "
-#                                                                                              "obliczeniowego (0.001)"])
-#                     solution_file.close()
-#                     statistics_file.close()
-#                 if sys.argv[1] == "dfs":
-#                     length, solution = DFS_iterative(sys.argv[2], initial_state, target_state)
-#                     solution_file = open(sys.argv[4], "w")
-#                     solution_file.writelines([length, '\n', solution])
-#                     solution_file.close()
-#         if sys.argv[1] == "astr":
-#             if sys.argv[2] not in ["manh", "hamm"]:
-#                 print("Podaj odpowiedni wariant metody A*")
-#             else:
-#                 if sys.argv[2] == "manh":
-#                     length, solution = a_star(sys.argv[2], initial_state, target_state)
-#                     solution_file = open(sys.argv[4], "w")
-#                     solution_file.writelines([length, '\n', solution])
-#                     solution_file.close()
-#                 if sys.argv[2] == "hamm":
-#                     length, solution = a_star(sys.argv[2], initial_state, target_state)
-#                     solution_file = open(sys.argv[4], "w")
-#                     solution_file.writelines([length, '\n', solution])
-#                     solution_file.close()
-#                 else:
-#                     print("Podano bledny wariant algorytmu A*")
-#         else:
-#             print("Podano bledna nazwe algorytmu")
-#     else:
-#         print("Podaj poprawna ilosc argumentow (5)")
-#
-# '''
-#             TO DO:
-#             1. Statystyki
-#             2. Tworzenie plików wynikowych jesli ich nie ma
-#             3. Sprawdzić czy wszystko działa
-# '''
+    #     #  [0]name.py [1]algorithm [2]ORDER/variant [3]initial state [4]output file solution [5]output file with statistics
+    #     if len(sys.argv) == 6:
+    #         file = open(f"układy/4x4/{sys.argv[3]}")
+    #         initial_state, target_state = convert_to_boards(file.readlines())
+    #         file.close()
+    #
+    #         if sys.argv[1] == "bfs" or sys.argv[1] == "dfs":
+    #             if sys.argv[2] not in ["RDUL", "RDLU", "DRUL", "DRUL", "DRLU", "LUDR", "LURD", "ULDR", "ULRD"]:
+    #                 print("Podaj odpowiedni porzadek przeszukiwania (ORDER)")
+    #             else:
+    #                 if sys.argv[1] == "bfs":
+    #                     length, solution = bfs(sys.argv[2], initial_state, target_state)
+    #                     solution_file = open(sys.argv[4], "w")
+    #                     statistics_file = open(sys.argv[5], "w")
+    #                     solution_file.writelines([length, '\n', solution])
+    #                     statistics_file.writelines([length, '\n', "liczba stanow odwiedzonych", '\n', "liczba stanow "
+    #                                                                                                   "przetworzonych",
+    #                                                 '\n', "maksymalna głębokość rekursji", '\n', "czas trwania procesu "
+    #                                                                                              "obliczeniowego (0.001)"])
+    #                     solution_file.close()
+    #                     statistics_file.close()
+    #                 if sys.argv[1] == "dfs":
+    #                     length, solution = DFS_iterative(sys.argv[2], initial_state, target_state)
+    #                     solution_file = open(sys.argv[4], "w")
+    #                     solution_file.writelines([length, '\n', solution])
+    #                     solution_file.close()
+    #         if sys.argv[1] == "astr":
+    #             if sys.argv[2] not in ["manh", "hamm"]:
+    #                 print("Podaj odpowiedni wariant metody A*")
+    #             else:
+    #                 if sys.argv[2] == "manh":
+    #                     length, solution = a_star(sys.argv[2], initial_state, target_state)
+    #                     solution_file = open(sys.argv[4], "w")
+    #                     solution_file.writelines([length, '\n', solution])
+    #                     solution_file.close()
+    #                 if sys.argv[2] == "hamm":
+    #                     length, solution = a_star(sys.argv[2], initial_state, target_state)
+    #                     solution_file = open(sys.argv[4], "w")
+    #                     solution_file.writelines([length, '\n', solution])
+    #                     solution_file.close()
+    #                 else:
+    #                     print("Podano bledny wariant algorytmu A*")
+    #         else:
+    #             print("Podano bledna nazwe algorytmu")
+    #     else:
+    #         print("Podaj poprawna ilosc argumentow (5)")
+    #
+    # '''
+    #             TO DO:
+    #             1. Statystyki
+    #             2. Tworzenie plików wynikowych jesli ich nie ma
+    #             3. Sprawdzić czy wszystko działa
+    # '''
 
+    # step_t = Step(None, None, moves, TARGET_STATE)
+    # step_e = Step(None, None, moves, EXPERIMENTAL_STATE)
+    # print(bfs(ORDER, INITIAL_STATE, TARGET_STATE))
+    #     print(DFS_iterative(ORDER, INITIAL_STATE, TARGET_STATE))
+    # print(DFS_iterative())
 
-# step_t = Step(None, None, moves, TARGET_STATE)
-# step_e = Step(None, None, moves, EXPERIMENTAL_STATE)
-# print(bfs(ORDER, INITIAL_STATE, TARGET_STATE))
-#     print(DFS_iterative(ORDER, INITIAL_STATE, TARGET_STATE))
-# print(DFS_iterative())
+    tar_state = [[1, 2, 3, 4],
+               [5, 6, 7, 8],
+               [9, 10, 11, 12],
+               [13, 14, 15, 0]]
 
-    print(a_star("hamm", INITIAL_STATE, TARGET_STATE))
+    initial_state = [[1, 2, 3, 4],
+                  [5, 6, 7, 8],
+                  [13, 9, 11, 12],
+                  [0, 10, 14, 15]]
+
+    print(a_star("hamm", initial_state, tar_state))
 
 # print(getPossibleDirections(step_e.board, ORDER))
