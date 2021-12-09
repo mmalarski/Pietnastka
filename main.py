@@ -1,6 +1,7 @@
 import collections
 from copy import deepcopy
-from enum import Enum
+import time
+import os
 import sys
 
 DEPTH = 20
@@ -8,7 +9,6 @@ TARGET_STATE = []
 
 ORDER = "RDUL"
 # ORDER = "RDLU"
-# ORDER = "DRUL"
 # ORDER = "DRUL"
 # ORDER = "DRLU"
 # ORDER = "LUDR"
@@ -70,20 +70,12 @@ class Step:
         return new_step
 
 
-def find_zero(board):
-    x, y = None, None
-    for row in range(len(board)):
-        for column in range(len(board[row])):
-            if board[row][column] == 0:
-                x = row
-                y = column
-    return x, y
-
-
 def blind_algorithms(order, variant, init_state, t_state):
     step = Step(None, None, [], init_state)
     open_list = [step]
     closed_list = {}
+    max_depth = 0
+    start_time = time.time()
     while open_list:
         if variant == "dfs":
             step = open_list.pop()
@@ -93,8 +85,11 @@ def blind_algorithms(order, variant, init_state, t_state):
             return "Wrong variant"
 
         if closed_list.get(step.board_string) is None:
+            if len(step.all_moves) > max_depth:
+                max_depth = len(step.all_moves)
             if step.board == t_state:
-                return str(len(list_to_string(step.all_moves))), list_to_string(step.all_moves)
+                return str(len(list_to_string(step.all_moves))), list_to_string(step.all_moves), len(open_list), len(
+                    closed_list), max_depth, time.time() - start_time
             closed_list[step.board_string] = step.all_moves
             if variant == "dfs" and len(step.all_moves) == DEPTH:
                 continue
@@ -106,7 +101,47 @@ def blind_algorithms(order, variant, init_state, t_state):
                 elif len(closed_list.get(child.board_string)) > len(child.all_moves):
                     open_list.append(child)
                     closed_list.pop(child.board_string)
-    return -1
+    return -1, -1, -1, -1, -1, -1
+
+
+def a_star(variant, init_state, t_state):
+    global TARGET_STATE
+    TARGET_STATE = t_state
+    step = Step(None, None, [], init_state)
+    open_list = [step]
+    closed_list = set()
+    closed_list.add(step)
+    max_depth = 0
+    start_time = time.time()
+    while open_list:
+        if variant == "manh":
+            open_list = collections.deque(sorted(list(open_list), key=lambda elem: elem.f_m))
+        elif variant == "hamm":
+            open_list = collections.deque(sorted(list(open_list), key=lambda elem: elem.f_h, reverse=True))
+        else:
+            print("Wrong variant in astar.")
+        step = open_list.popleft()
+        if len(step.all_moves) > max_depth:
+            max_depth = len(step.all_moves)
+        if step.board == t_state:
+            return str(len(list_to_string(step.all_moves))), list_to_string(step.all_moves), len(open_list), len(
+                    closed_list), max_depth, time.time() - start_time
+        for direction in get_possible_directions(step.board, "LURD"):
+            child = deepcopy(step)
+            child = child.move_step(direction, step.board, find_zero(step.board)[0], find_zero(step.board)[1])
+            if child.board not in [b.board for b in closed_list]:
+                open_list.append(child)
+                closed_list.add(child)
+
+
+def find_zero(board):
+    x, y = None, None
+    for row in range(len(board)):
+        for column in range(len(board[row])):
+            if board[row][column] == 0:
+                x = row
+                y = column
+    return x, y
 
 
 def list_to_string(s):
@@ -122,31 +157,6 @@ def sq_list_to_string(s):
         for inner_element in ele:
             str1 += str(inner_element) + ','
     return str1
-
-
-def a_star(variant, init_state, t_state):
-    global TARGET_STATE
-    TARGET_STATE = t_state
-    step = Step(None, None, [], init_state)
-    open_list = [step]  # for steps that we stepped into
-    closed_list = set()  # for steps with all neighbours checked
-    closed_list.add(step)
-    while open_list:
-        if variant == "manh":
-            open_list = collections.deque(sorted(list(open_list), key=lambda elem: elem.f_m))
-        elif variant == "hamm":
-            open_list = collections.deque(sorted(list(open_list), key=lambda elem: elem.f_h, reverse=True))
-        else:
-            print("Wrong variant in astar.")
-        step = open_list.popleft()
-        if step.board == t_state:
-            return str(len(list_to_string(step.all_moves))), list_to_string(step.all_moves)
-        for direction in get_possible_directions(step.board, "LURD"):
-            child = deepcopy(step)
-            child = child.move_step(direction, step.board, find_zero(step.board)[0], find_zero(step.board)[1])
-            if child.board not in [b.board for b in closed_list]:
-                open_list.append(child)
-                closed_list.add(child)
 
 
 def how_many_in_pos(board):
@@ -235,7 +245,7 @@ def convert_to_boards(text):
         initial_board.append(text[i + 1].strip("\n").split(" "))
     for i in range(w):
         for j in range(k):
-            target_board[i].append(i * (w + 1) + j + 1)
+            target_board[i].append(i * k + j + 1)
             initial_board[i][j] = int(initial_board[i][j])
     target_board[w - 1][k - 1] = 0
 
@@ -245,56 +255,216 @@ def convert_to_boards(text):
 if __name__ == '__main__':
     # [0]name.py [1]algorithm [2]ORDER/variant [3]initial state [4]output file solution [5]output file with statistics
     if len(sys.argv) == 6:
-        file = open(f"układy/4x4/{sys.argv[3]}")
+        file = open(f"uklady/4x4/{sys.argv[3]}")
         initial_state, target_state = convert_to_boards(file.readlines())
         file.close()
         solution_file = open(sys.argv[4], "w")
         statistics_file = open(sys.argv[5], "w")
 
-        print_board(initial_state)
-        print_board(target_state)
-
         if sys.argv[1] == "bfs" or sys.argv[1] == "dfs":
             if sys.argv[2] not in ["RDUL", "RDLU", "DRUL", "DRUL", "DRLU", "LUDR", "LURD", "ULDR", "ULRD"]:
                 print("Podaj odpowiedni porzadek przeszukiwania (ORDER)")
             else:
-                if sys.argv[1] == "bfs":
-                    length, solution = blind_algorithms(sys.argv[2], sys.argv[1], initial_state, target_state)
-                    solution_file.writelines([length, '\n', solution])
-                    statistics_file.writelines([length, '\n', "liczba stanow odwiedzonych", '\n', "liczba stanow "
-                                                                                                  "przetworzonych",
-                                                '\n', "maksymalna głębokość rekursji", '\n', "czas trwania procesu "
-                                                                                             "obliczeniowego (0.001)"])
-                else:
-                    length, solution = blind_algorithms(sys.argv[2], sys.argv[1], initial_state, target_state)
-                    solution_file.writelines([length, '\n', solution])
-                    statistics_file.writelines([length, '\n', "liczba stanow odwiedzonych", '\n', "liczba stanow "
-                                                                                                  "przetworzonych",
-                                                '\n', "maksymalna głębokość rekursji", '\n', "czas trwania procesu "
-                                                                                             "obliczeniowego (0.001)"])
+                length, solution, ol_size, cl_size, depth, time = blind_algorithms(sys.argv[2], sys.argv[1], initial_state, target_state)
+                solution_file.writelines([length, '\n', solution])
+                statistics_file.write(length)
+                if length != -1:
+                    statistics_file.writelines(['\n', str(ol_size),
+                                                '\n', str(cl_size),
+                                                '\n', str(depth),
+                                                '\n', str(round(time * 1000, 3))])
         elif sys.argv[1] == "astr":
             if sys.argv[2] not in ["manh", "hamm"]:
                 print("Podaj odpowiedni wariant metody A*")
             else:
-                if sys.argv[2] == "manh":
-                    length, solution = a_star(sys.argv[2], initial_state, target_state)
-                    solution_file.writelines([length, '\n', solution])
-                    statistics_file.writelines([length, '\n', "liczba stanow odwiedzonych", '\n', "liczba stanow "
-                                                                                                  "przetworzonych",
-                                                '\n', "maksymalna głębokość rekursji", '\n', "czas trwania procesu "
-                                                                                             "obliczeniowego (0.001)"])
-                else:
-                    length, solution = a_star(sys.argv[2], initial_state, target_state)
-                    solution_file.writelines([length, '\n', solution])
-                    statistics_file.writelines([length, '\n', "liczba stanow odwiedzonych", '\n', "liczba stanow "
-                                                                                                  "przetworzonych",
-                                                '\n', "maksymalna głębokość rekursji", '\n', "czas trwania procesu "
-                                                                                             "obliczeniowego (0.001)"])
+                length, solution, ol_size, cl_size, depth, time = a_star(sys.argv[2], initial_state, target_state)
+                solution_file.writelines([length, '\n', solution])
+                statistics_file.writelines([length,
+                                            '\n', str(ol_size),
+                                            '\n', str(cl_size),
+                                            '\n', str(depth),
+                                            '\n', str(round(time * 1000, 3))])
         else:
             print(f"Podano bledna nazwe algorytmu: {sys.argv[1]}")
 
         solution_file.close()
         statistics_file.close()
+    elif sys.argv[1] == "generate":
+        for uklad in os.listdir("uklady/4x4"):
+            file_path = os.path.join("./uklady/4x4/", uklad)
+            if os.path.isfile(file_path):
+                file = open(file_path)
+                initial_state, target_state = convert_to_boards(file.readlines())
+
+                #OTWIERANIE
+                # rozwiazania
+                solution_file1 = open(f"rozwiazania/{uklad[:-4]}_bfs_RDUL_sol.txt", "x")
+                # solution_file2 = open(f"../../rozwiazania/{uklad[:-4]}_bfs_RDLU_sol.txt", "w")
+                # solution_file3 = open(f"../../rozwiazania/{uklad[:-4]}_bfs_DRUL_sol.txt", "w")
+                # solution_file4 = open(f"../../rozwiazania/{uklad[:-4]}_bfs_DRLU_sol.txt", "w")
+                # solution_file5 = open(f"../../rozwiazania/{uklad[:-4]}_bfs_LUDR_sol.txt", "w")
+                # solution_file6 = open(f"../../rozwiazania/{uklad[:-4]}_bfs_LURD_sol.txt", "w")
+                # solution_file7 = open(f"../../rozwiazania/{uklad[:-4]}_bfs_ULDR_sol.txt", "w")
+                # solution_file8 = open(f"../../rozwiazania/{uklad[:-4]}_bfs_ULRD_sol.txt", "w")
+
+                solution_file9 = open(f"rozwiazania/{uklad[:-4]}_dfs_RDUL_sol.txt", 'w+')
+                # solution_file10 = open(f"../../rozwiazania/{uklad[:-4]}_dfs_RDLU_sol.txt", "w")
+                # solution_file11 = open(f"../../rozwiazania/{uklad[:-4]}_dfs_DRUL_sol.txt", "w")
+                # solution_file12 = open(f"../../rozwiazania/{uklad[:-4]}_dfs_DRLU_sol.txt", "w")
+                # solution_file13 = open(f"../../rozwiazania/{uklad[:-4]}_dfs_LUDR_sol.txt", "w")
+                # solution_file14 = open(f"../../rozwiazania/{uklad[:-4]}_dfs_LURD_sol.txt", "w")
+                # solution_file15 = open(f"../../rozwiazania/{uklad[:-4]}_dfs_ULDR_sol.txt", "w")
+                # solution_file16 = open(f"../../rozwiazania/{uklad[:-4]}_dfs_ULRD_sol.txt", "w")
+
+                solution_file17 = open(f"rozwiazania/{uklad[:-4]}_astr_manh_sol.txt", 'w+')
+                solution_file18 = open(f"rozwiazania/{uklad[:-4]}_astr_hamm_sol.txt", 'w+')
+
+                # statystyki
+                solution_file19 = open(f"statystyki/{uklad[:-4]}_bfs_RDUL_stats.txt", 'w+')
+                # solution_file20 = open(f"../../statystyki/{uklad[:-4]}_bfs_RDLU_stats.txt", "w")
+                # solution_file21 = open(f"../../statystyki/{uklad[:-4]}_bfs_DRUL_stats.txt", "w")
+                # solution_file22 = open(f"../../statystyki/{uklad[:-4]}_bfs_DRLU_stats.txt", "w")
+                # solution_file23 = open(f"../../statystyki/{uklad[:-4]}_bfs_LUDR_stats.txt", "w")
+                # solution_file24 = open(f"../../statystyki/{uklad[:-4]}_bfs_LURD_stats.txt", "w")
+                # solution_file25 = open(f"../../statystyki/{uklad[:-4]}_bfs_ULDR_stats.txt", "w")
+                # solution_file26 = open(f"../../statystyki/{uklad[:-4]}_bfs_ULRD_stats.txt", "w")
+
+                solution_file27 = open(f"statystyki/{uklad[:-4]}_dfs_RDUL_stats.txt", 'w+')
+                # solution_file28 = open(f"../../statystyki/{uklad[:-4]}_dfs_RDLU_stats.txt", "w")
+                # solution_file29 = open(f"../../statystyki/{uklad[:-4]}_dfs_DRUL_stats.txt", "w")
+                # solution_file30 = open(f"../../statystyki/{uklad[:-4]}_dfs_DRLU_stats.txt", "w")
+                # solution_file31 = open(f"../../statystyki/{uklad[:-4]}_dfs_LUDR_stats.txt", "w")
+                # solution_file32 = open(f"../../statystyki/{uklad[:-4]}_dfs_LURD_stats.txt", "w")
+                # solution_file33 = open(f"../../statystyki/{uklad[:-4]}_dfs_ULDR_stats.txt", "w")
+                # solution_file34 = open(f"../../statystyki/{uklad[:-4]}_dfs_ULRD_stats.txt", "w")
+
+                solution_file35 = open(f"statystyki/{uklad[:-4]}_astr_manh_stats.txt", 'w+')
+                solution_file36 = open(f"statystyki/{uklad[:-4]}_astr_hamm_stats.txt", 'w+')
+
+                # ZAPIS
+                # rozwiazania
+                length, solution = blind_algorithms("RDUL", "bfs", initial_state, target_state)[:-3]
+                solution_file1.writelines([length, '\n', solution])
+                # length, solution = blind_algorithms("RDLU", "bfs", initial_state, target_state)[:-3]
+                # solution_file2.writelines([length, '\n', solution])
+                # length, solution = blind_algorithms("DRUL", "bfs", initial_state, target_state)[:-3]
+                # solution_file3.writelines([length, '\n', solution])
+                # length, solution = blind_algorithms("DRLU", "bfs", initial_state, target_state)[:-3]
+                # solution_file4.writelines([length, '\n', solution])
+                # length, solution = blind_algorithms("LUDR", "bfs", initial_state, target_state)[:-3]
+                # solution_file5.writelines([length, '\n', solution])
+                # length, solution = blind_algorithms("LURD", "bfs", initial_state, target_state)[:-3]
+                # solution_file6.writelines([length, '\n', solution])
+                # length, solution = blind_algorithms("ULRD", "bfs", initial_state, target_state)[:-3]
+                # solution_file7.writelines([length, '\n', solution])
+                # length, solution = blind_algorithms("ULRD", "bfs", initial_state, target_state)[:-3]
+                # solution_file8.writelines([length, '\n', solution])
+
+                length, solution = blind_algorithms("RDUL", "dfs", initial_state, target_state)[:-3]
+                solution_file9.writelines([length, '\n', solution])
+                # length, solution = blind_algorithms("RDLU", "dfs", initial_state, target_state)[:-3]
+                # solution_file10.writelines([length, '\n', solution])
+                # length, solution = blind_algorithms("DRUL", "dfs", initial_state, target_state)[:-3]
+                # solution_file11.writelines([length, '\n', solution])
+                # length, solution = blind_algorithms("DRLU", "dfs", initial_state, target_state)[:-3]
+                # solution_file12.writelines([length, '\n', solution])
+                # length, solution = blind_algorithms("LUDR", "dfs", initial_state, target_state)[:-3]
+                # solution_file13.writelines([length, '\n', solution])
+                # length, solution = blind_algorithms("LURD", "dfs", initial_state, target_state)[:-3]
+                # solution_file14.writelines([length, '\n', solution])
+                # length, solution = blind_algorithms("ULRD", "dfs", initial_state, target_state)[:-3]
+                # solution_file15.writelines([length, '\n', solution])
+                # length, solution = blind_algorithms("ULRD", "dfs", initial_state, target_state)[:-3]
+                # solution_file16.writelines([length, '\n', solution])
+
+                length, solution = a_star("manh", initial_state, target_state)[:-3]
+                solution_file17.writelines([length, '\n', solution])
+                length, solution = a_star("hamm", initial_state, target_state)[:-3]
+                solution_file18.writelines([length, '\n', solution])
+
+                # statystyki
+                length, solution, ol_size, cl_size, depth, time = blind_algorithms("RDUL", "bfs", initial_state, target_state)
+                solution_file19.writelines([length, '\n', str(ol_size), '\n', str(cl_size), '\n', str(depth), '\n', str(round(time * 1000, 3))])
+                # length, solution, ol_size, cl_size, depth, time = blind_algorithms("RDUL", "bfs", initial_state, target_state)
+                # solution_file20.writelines([length, '\n', str(ol_size), '\n', str(cl_size), '\n', str(depth), '\n', str(round(time * 1000, 3))])
+                # length, solution, ol_size, cl_size, depth, time = blind_algorithms("RDUL", "bfs", initial_state, target_state)
+                # solution_file21.writelines([length, '\n', str(ol_size), '\n', str(cl_size), '\n', str(depth), '\n', str(round(time * 1000, 3))])
+                # length, solution, ol_size, cl_size, depth, time = blind_algorithms("RDUL", "bfs", initial_state, target_state)
+                # solution_file22.writelines([length, '\n', str(ol_size), '\n', str(cl_size), '\n', str(depth), '\n', str(round(time * 1000, 3))])
+                # length, solution, ol_size, cl_size, depth, time = blind_algorithms("RDUL", "bfs", initial_state, target_state)
+                # solution_file23.writelines([length, '\n', str(ol_size), '\n', str(cl_size), '\n', str(depth), '\n', str(round(time * 1000, 3))])
+                # length, solution, ol_size, cl_size, depth, time = blind_algorithms("RDUL", "bfs", initial_state, target_state)
+                # solution_file24.writelines([length, '\n', str(ol_size), '\n', str(cl_size), '\n', str(depth), '\n', str(round(time * 1000, 3))])
+                # length, solution, ol_size, cl_size, depth, time = blind_algorithms("RDUL", "bfs", initial_state, target_state)
+                # solution_file25.writelines([length, '\n', str(ol_size), '\n', str(cl_size), '\n', str(depth), '\n', str(round(time * 1000, 3))])
+                # length, solution, ol_size, cl_size, depth, time = blind_algorithms("RDUL", "bfs", initial_state, target_state)
+                # solution_file26.writelines([length, '\n', str(ol_size), '\n', str(cl_size), '\n', str(depth), '\n', str(round(time * 1000, 3))])
+
+                length, solution, ol_size, cl_size, depth, time = blind_algorithms("RDUL", "dfs", initial_state, target_state)
+                solution_file27.writelines([length, '\n', str(ol_size), '\n', str(cl_size), '\n', str(depth), '\n', str(round(time * 1000, 3))])
+                # length, solution, ol_size, cl_size, depth, time = blind_algorithms("RDUL", "dfs", initial_state, target_state)
+                # solution_file28.writelines([length, '\n', str(ol_size), '\n', str(cl_size), '\n', str(depth), '\n', str(round(time * 1000, 3))])
+                # length, solution, ol_size, cl_size, depth, time = blind_algorithms("RDUL", "dfs", initial_state, target_state)
+                # solution_file29.writelines([length, '\n', str(ol_size), '\n', str(cl_size), '\n', str(depth), '\n', str(round(time * 1000, 3))])
+                # length, solution, ol_size, cl_size, depth, time = blind_algorithms("RDUL", "dfs", initial_state, target_state)
+                # solution_file30.writelines([length, '\n', str(ol_size), '\n', str(cl_size), '\n', str(depth), '\n', str(round(time * 1000, 3))])
+                # length, solution, ol_size, cl_size, depth, time = blind_algorithms("RDUL", "dfs", initial_state, target_state)
+                # solution_file31.writelines([length, '\n', str(ol_size), '\n', str(cl_size), '\n', str(depth), '\n', str(round(time * 1000, 3))])
+                # length, solution, ol_size, cl_size, depth, time = blind_algorithms("RDUL", "dfs", initial_state, target_state)
+                # solution_file32.writelines([length, '\n', str(ol_size), '\n', str(cl_size), '\n', str(depth), '\n', str(round(time * 1000, 3))])
+                # length, solution, ol_size, cl_size, depth, time = blind_algorithms("RDUL", "dfs", initial_state, target_state)
+                # solution_file33.writelines([length, '\n', str(ol_size), '\n', str(cl_size), '\n', str(depth), '\n', str(round(time * 1000, 3))])
+                # length, solution, ol_size, cl_size, depth, time = blind_algorithms("RDUL", "dfs", initial_state, target_state)
+                # solution_file34.writelines([length, '\n', str(ol_size), '\n', str(cl_size), '\n', str(depth), '\n', str(round(time * 1000, 3))])
+
+                length, solution, ol_size, cl_size, depth, time = a_star("manh", initial_state, target_state)
+                solution_file35.writelines([length, '\n', str(ol_size), '\n', str(cl_size), '\n', str(depth), '\n', str(round(time * 1000, 3))])
+                length, solution, ol_size, cl_size, depth, time = a_star("hamm", initial_state, target_state)
+                solution_file36.writelines([length, '\n', str(ol_size), '\n', str(cl_size), '\n', str(depth), '\n', str(round(time * 1000, 3))])
+
+                # ZAMYKANIE
+                # rozwiazania
+                solution_file1.close()
+                # solution_file2.close()
+                # solution_file3.close()
+                # solution_file4.close()
+                # solution_file5.close()
+                # solution_file6.close()
+                # solution_file7.close()
+                # solution_file8.close()
+                solution_file9.close()
+                # solution_file10.close()
+                # solution_file11.close()
+                # solution_file12.close()
+                # solution_file13.close()
+                # solution_file14.close()
+                # solution_file15.close()
+                # solution_file16.close()
+                solution_file17.close()
+                solution_file18.close()
+
+                # statystyki
+                solution_file19.close()
+                # solution_file20.close()
+                # solution_file21.close()
+                # solution_file22.close()
+                # solution_file23.close()
+                # solution_file24.close()
+                # solution_file25.close()
+                # solution_file26.close()
+                solution_file27.close()
+                # solution_file28.close()
+                # solution_file29.close()
+                # solution_file30.close()
+                # solution_file31.close()
+                # solution_file32.close()
+                # solution_file33.close()
+                # solution_file34.close()
+                solution_file35.close()
+                solution_file36.close()
+
+
+
     else:
         print("Podaj poprawna ilosc argumentow (5)")
 
@@ -310,9 +480,6 @@ if __name__ == '__main__':
     # print(bfs(ORDER, INITIAL_STATE, TARGET_STATE))
     #     print(DFS_iterative(ORDER, INITIAL_STATE, TARGET_STATE))
     # print(DFS_iterative())
-
-
-
 
     # tar_state = [[1, 2, 3, 4],
     #              [5, 6, 7, 8],
