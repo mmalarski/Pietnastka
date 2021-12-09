@@ -397,9 +397,10 @@ def convert_to_boards(text):
         initial_board.append(text[i + 1].strip("\n").split(" "))
     for i in range(w):
         for j in range(k):
-            target_board[i].append(i * w + j + 1)
+            target_board[i].append(i * (w + 1) + j + 1)
             initial_board[i][j] = int(initial_board[i][j])
     target_board[w - 1][k - 1] = 0
+
     return initial_board, target_board
 
 
@@ -411,6 +412,9 @@ if __name__ == '__main__':
         file.close()
         solution_file = open(sys.argv[4], "w")
         statistics_file = open(sys.argv[5], "w")
+
+        print_board(initial_state)
+        print_board(target_state)
 
         if sys.argv[1] == "bfs" or sys.argv[1] == "dfs":
             if sys.argv[2] not in ["RDUL", "RDLU", "DRUL", "DRUL", "DRLU", "LUDR", "LURD", "ULDR", "ULRD"]:
