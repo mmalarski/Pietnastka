@@ -19,11 +19,6 @@ ORDER = "RDUL"
 POS = [0, 0]
 
 
-class variants(Enum):
-    HAMMING = 0,
-    MANHATTAN = 1
-
-
 class Step:
     def __init__(self, parent, previous_move, all_moves, board):
         self.parent = parent
@@ -31,9 +26,6 @@ class Step:
         self.all_moves = all_moves
         self.board = board
         self.board_string = sq_list_to_string(board)
-        self.discovered = False
-        self.processed = False
-        self.isRoot = False
         if previous_move is not None:
             self.all_moves.append(previous_move)
 
@@ -44,21 +36,6 @@ class Step:
     @property
     def f_h(self):
         return how_many_in_pos(self.board)
-
-    def mark_discovered(self):
-        self.discovered = True
-
-    def mark_root(self):
-        self.isRoot = True
-
-    def mark_processed(self):
-        self.processed = True
-
-    def is_discovered(self):
-        return self.discovered
-
-    def is_processed(self):
-        return self.processed
 
     def create_next_step(self, move, new_board):
         next_step = Step(self, move, deepcopy(self.all_moves), new_board)
@@ -103,124 +80,8 @@ def find_zero(board):
     return x, y
 
 
-def find_value(board, value):
-    x, y = None, None
-    for row in range(len(board)):
-        for column in range(len(board[row])):
-            if board[row][column] == value:
-                x = row
-                y = column
-    return x, y
-
-
-def sym_move_step(move, board_state, x, y):
-    new_arr = deepcopy(board_state)
-    if move == 'U':
-        new_arr[x - 1][y] = board_state[x][y]
-        new_arr[x][y] = board_state[x - 1][y]
-    elif move == 'D':
-        new_arr[x + 1][y] = board_state[x][y]
-        new_arr[x][y] = board_state[x + 1][y]
-    elif move == 'R':
-        new_arr[x][y + 1] = board_state[x][y]
-        new_arr[x][y] = board_state[x][y + 1]
-    elif move == 'L':
-        new_arr[x][y - 1] = board_state[x][y]
-        new_arr[x][y] = board_state[x][y - 1]
-    return new_arr
-
-
-def bfs(order, init_state, t_state):
-    opposite_directions = {"U": "D", "L": "R", "R": "L", "D": "U"}
+def blind_algorithms(order, variant, init_state, t_state):
     step = Step(None, None, [], init_state)
-    open_list = [step]  # for steps that we stepped into
-    closed_list = {}  # for steps with all neighbours checked
-    # print('START')
-    # print_board(step.board)
-    timer_counter = 0
-    while step.board != t_state:
-
-        timer_counter += 1
-        if timer_counter % 100000 == 0:
-            print(f"{timer_counter / 100000}. calculating...")
-
-        posdirs = [char for char in get_possible_directions(step.board, order)]
-        iteration_counter = 0
-        for direction in posdirs:
-            sym = sym_move_step(direction, step.board, find_zero(step.board)[0],
-                                find_zero(step.board)[1])
-            if sym not in [b.board for b in closed_list] and sym not in [b.board for b in open_list]:
-                # add new artificially created step to open list
-                open_list.append(Step(step, direction, step.all_moves.copy(), sym))
-            # check how many new steps there are
-            iteration_counter = iteration_counter + 1
-        # if there are all done then move the step from open to closed and move to the first from open list
-        if iteration_counter == len(posdirs):
-            closed_list[step] = step
-            open_list.pop(0)
-            step = open_list[0]
-    # if len(step.all_moves) - 1 == DEPTH:
-    #     print('Depth reached, this is the end')
-    #     return None
-    return str(len(list_to_string(step.all_moves))), list_to_string(step.all_moves)
-
-
-# def dfs():
-#     step = Step(None, None, [], INITIAL_STATE)
-#     open_list = [step]  # for steps that we stepped into
-#     closed_list = {}  # for steps with all neighbours checked
-#     print('START')
-#     print_board(step.board)
-#     timer_counter = 0
-#     while len(open_list) != 0 and step.board != TARGET_STATE:
-#
-#         timer_counter += 1
-#         if timer_counter % 100000 == 0:
-#             print(f"{timer_counter / 100000}. calculating...")
-#
-#         iteration_counter = 0
-#         if len(step.all_moves) == DEPTH:
-#             open_list.remove(step)
-#             closed_list[step] = step
-#             # bledne wracanie do parenta: lista moves zostaje z dziecka, nie odejmowany jest ostatni móve
-#             step = step.parent
-#             continue
-#         posdirs = [char for char in get_possible_directions(step.board, ORDER)]
-#         for direction in posdirs:
-#             sym = sym_move_step(direction, step.board, find_zero(step.board)[0],
-#                                 find_zero(step.board)[1])  # board sym for the specific direction
-#             # temp = deepcopy(step.all_moves)
-#             # temp.append(direction)
-#             if sym not in [b.board for b in open_list]:  # child is not on open list
-#                 if sym not in [b.board for b in closed_list]:  # child is not on closed list
-#                     # print(direction, end='')
-#                     step = step.move_step(direction, step.board, find_zero(step.board)[0],
-#                                           find_zero(step.board)[1])  # not on lists so we move
-#                     # print_board(step.board)
-#                     open_list.append(step)  # adding current step to open_list
-#                     break  # getting out of for statement
-#
-#             iteration_counter = iteration_counter + 1
-#         if iteration_counter == len(posdirs):
-#             open_list.remove(step)
-#             closed_list[step] = step
-#             # tu nie przechodzimy do kolejnych dzieci roota tylko konczymy program co jest bledne
-#             if step.parent is not None:
-#                 step = step.parent
-#
-#             if step.parent is None:
-#                 pass
-#
-#         # if len(open_list) != 0:
-#         #     print('Depth reached, this is the end')
-#         #     return -1
-#         # print_board(step.board)
-#     return list_to_string(step.all_moves), len(list_to_string(step.all_moves))
-
-
-def DFS_iterative(order, variant, init_state, t_state):
-    step = Step(None, None, [], init_state)
-    step.mark_root()
     open_list = [step]
     closed_list = {}
     while open_list:
@@ -235,15 +96,16 @@ def DFS_iterative(order, variant, init_state, t_state):
             if step.board == t_state:
                 return str(len(list_to_string(step.all_moves))), list_to_string(step.all_moves)
             closed_list[step.board_string] = step.all_moves
-            if len(step.all_moves) != DEPTH:
-                for direction in reversed(get_possible_directions(step.board, order)):
-                    child = deepcopy(step)
-                    child = child.move_step(direction, step.board, find_zero(step.board)[0], find_zero(step.board)[1])
-                    if closed_list.get(child.board_string) is None:
-                        open_list.append(child)
-                    elif len(closed_list.get(child.board_string)) > len(child.all_moves):
-                        open_list.append(child)
-                        closed_list.pop(child.board_string)
+            if variant == "dfs" and len(step.all_moves) == DEPTH:
+                continue
+            for direction in reversed(get_possible_directions(step.board, order)):
+                child = deepcopy(step)
+                child = child.move_step(direction, step.board, find_zero(step.board)[0], find_zero(step.board)[1])
+                if closed_list.get(child.board_string) is None:
+                    open_list.append(child)
+                elif len(closed_list.get(child.board_string)) > len(child.all_moves):
+                    open_list.append(child)
+                    closed_list.pop(child.board_string)
     return -1
 
 
@@ -257,16 +119,14 @@ def list_to_string(s):
 def sq_list_to_string(s):
     str1 = ""
     for ele in s:
-        for innerele in ele:
-            str1 += str(innerele) + ','
+        for inner_element in ele:
+            str1 += str(inner_element) + ','
     return str1
 
 
 def a_star(variant, init_state, t_state):
     global TARGET_STATE
-    print_board(TARGET_STATE)
     TARGET_STATE = t_state
-    print_board(TARGET_STATE)
     step = Step(None, None, [], init_state)
     open_list = [step]  # for steps that we stepped into
     closed_list = set()  # for steps with all neighbours checked
@@ -289,12 +149,6 @@ def a_star(variant, init_state, t_state):
                 closed_list.add(child)
 
 
-def print_board(board):
-    for row in board:
-        print(row)
-    print()
-
-
 def how_many_in_pos(board):
     count = 0
     k = 0
@@ -307,22 +161,6 @@ def how_many_in_pos(board):
         l = 0
         k = k + 1
     return count
-
-
-def all_positions_good(board):
-    count = how_many_in_pos(board)
-
-    result = 0
-    for i in TARGET_STATE:
-        for j in i:
-            result = result + 1
-    return count == result
-
-
-def distance(board1, board2):
-    x, y = find_zero(board1)
-    x_tar, y_tar = find_zero(board2)
-    return abs(x - x_tar) + abs(y - y_tar)
 
 
 def distance_manhattan(board):
@@ -404,7 +242,7 @@ def convert_to_boards(text):
 
 
 if __name__ == '__main__':
-    #  [0]name.py [1]algorithm [2]ORDER/variant [3]initial state [4]output file solution [5]output file with statistics
+    # [0]name.py [1]algorithm [2]ORDER/variant [3]initial state [4]output file solution [5]output file with statistics
     if len(sys.argv) == 6:
         file = open(f"układy/4x4/{sys.argv[3]}")
         initial_state, target_state = convert_to_boards(file.readlines())
@@ -417,14 +255,14 @@ if __name__ == '__main__':
                 print("Podaj odpowiedni porzadek przeszukiwania (ORDER)")
             else:
                 if sys.argv[1] == "bfs":
-                    length, solution = DFS_iterative(sys.argv[2], sys.argv[1], initial_state, target_state)
+                    length, solution = blind_algorithms(sys.argv[2], sys.argv[1], initial_state, target_state)
                     solution_file.writelines([length, '\n', solution])
                     statistics_file.writelines([length, '\n', "liczba stanow odwiedzonych", '\n', "liczba stanow "
                                                                                                   "przetworzonych",
                                                 '\n', "maksymalna głębokość rekursji", '\n', "czas trwania procesu "
                                                                                              "obliczeniowego (0.001)"])
                 else:
-                    length, solution = DFS_iterative(sys.argv[2], sys.argv[1], initial_state, target_state)
+                    length, solution = blind_algorithms(sys.argv[2], sys.argv[1], initial_state, target_state)
                     solution_file.writelines([length, '\n', solution])
                     statistics_file.writelines([length, '\n', "liczba stanow odwiedzonych", '\n', "liczba stanow "
                                                                                                   "przetworzonych",
@@ -455,14 +293,14 @@ if __name__ == '__main__':
         statistics_file.close()
     else:
         print("Podaj poprawna ilosc argumentow (5)")
-    #
+
     # '''
     #             TO DO:
     #             1. Statystyki
     #             2. Tworzenie plików wynikowych jesli ich nie ma
     #             3. Sprawdzić czy wszystko działa
     # '''
-
+    #
     # step_t = Step(None, None, moves, TARGET_STATE)
     # step_e = Step(None, None, moves, EXPERIMENTAL_STATE)
     # print(bfs(ORDER, INITIAL_STATE, TARGET_STATE))
@@ -478,8 +316,8 @@ if __name__ == '__main__':
     #              [13, 14, 15, 0]]
     #
     # initial_state = [[1, 2, 3, 4],
-    #                  [5, 7, 10, 8],
-    #                  [9, 6, 12, 0],
-    #                  [13, 14, 11, 15]]
+    #                  [5, 6, 11, 7],
+    #                  [9, 10, 8, 0],
+    #                  [13, 14, 15, 12]]
     #
-    # print(DFS_iterative(ORDER, "dfs", initial_state, tar_state))
+    # print(DFS_iterative(ORDER, "bfs", initial_state, tar_state))
