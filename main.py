@@ -56,8 +56,10 @@ class Step:
         self.previous_move = previous_move
         self.all_moves = all_moves
         self.board = board
+        self.board_string = sq_list_to_string(board)
         self.discovered = False
         self.processed = False
+        self.isRoot = False
         if previous_move is not None:
             self.all_moves.append(previous_move)
 
@@ -71,6 +73,9 @@ class Step:
 
     def mark_discovered(self):
         self.discovered = True
+
+    def mark_root(self):
+        self.isRoot = True
 
     def mark_processed(self):
         self.processed = True
@@ -241,24 +246,46 @@ def bfs(order, init_state, t_state):
 
 def DFS_iterative(order, init_state, t_state):
     step = Step(None, None, [], init_state)
+    step.mark_root()
     open_list = [step]
+    closed_list = {}
     while open_list:
         step = open_list.pop()
-        if not step.is_discovered():
+        if closed_list.get(step.board_string) is None:
             if step.board == t_state:
                 return str(len(list_to_string(step.all_moves))), list_to_string(step.all_moves)
-            step.mark_discovered()
+            closed_list[step.board_string] = step.board_string
             if len(step.all_moves) != DEPTH:
                 for direction in reversed(get_possible_directions(step.board, order)):
-                    step1 = deepcopy(step)
-                    step1 = step1.move_step(direction, step.board, find_zero(step.board)[0], find_zero(step.board)[1])
-                    open_list.append(step1)
+                    if len(step.all_moves) == 1:
+                        print(get_possible_directions(step.board, order))
+                    child = deepcopy(step)
+                    child = child.move_step(direction, step.board, find_zero(step.board)[0], find_zero(step.board)[1])
+                    if closed_list.get(child.board_string) is None:
+                        open_list.append(child)
+        # if not step.isRoot and step.all_moves[0] == "U":
+        # print(open_list[0].all_moves)
+        # print_board(open_list[0].board)
+        # print('\n')
+        # print(open_list[1].all_moves)
+        # print_board(open_list[1].board)
+        # print('\n')
+        # break
+
 
 
 def list_to_string(s):
     str1 = ""
     for ele in s:
         str1 += str(ele)
+    return str1
+
+
+def sq_list_to_string(s):
+    str1 = ""
+    for ele in s:
+        for innerele in ele:
+            str1 += str(innerele) + ','
     return str1
 
 
@@ -465,15 +492,15 @@ if __name__ == '__main__':
     # print(DFS_iterative())
 
     tar_state = [[1, 2, 3, 4],
-               [5, 6, 7, 8],
-               [9, 10, 11, 12],
-               [13, 14, 15, 0]]
+                 [5, 6, 7, 8],
+                 [9, 10, 11, 12],
+                 [13, 14, 15, 0]]
 
     initial_state = [[1, 2, 3, 4],
-                  [5, 6, 7, 8],
-                  [13, 9, 11, 12],
-                  [0, 10, 14, 15]]
+                     [5, 6, 7, 8],
+                     [13, 9, 11, 12],
+                     [0, 10, 14, 15]]
 
-    print(a_star("hamm", initial_state, tar_state))
+    print(DFS_iterative(ORDER, initial_state, tar_state))
 
 # print(getPossibleDirections(step_e.board, ORDER))
