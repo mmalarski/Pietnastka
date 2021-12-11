@@ -101,7 +101,7 @@ def blind_algorithms(order, variant, init_state, t_state):
                 elif len(closed_list.get(child.board_string)) > len(child.all_moves):
                     open_list.append(child)
                     closed_list.pop(child.board_string)
-    return str(-1), str(-1), -1, -1, -1, -1
+    return str(-1), list_to_string(step.all_moves), len(open_list), len(closed_list), max_depth, t.time() - start_time
 
 
 def a_star(variant, init_state, t_state):
@@ -255,7 +255,7 @@ def convert_to_boards(text):
 if __name__ == '__main__':
     # [0]name.py [1]algorithm [2]ORDER/variant [3]initial state [4]output file solution [5]output file with statistics
     if len(sys.argv) == 6:
-        file = open(f"uklady/4x4/{sys.argv[3]}")
+        file = open(f"{sys.argv[3]}")
         initial_state, target_state = convert_to_boards(file.readlines())
         file.close()
         solution_file = open(sys.argv[4], "w")
@@ -267,7 +267,8 @@ if __name__ == '__main__':
             else:
                 length, solution, ol_size, cl_size, depth, time = blind_algorithms(sys.argv[2], sys.argv[1],
                                                                                    initial_state, target_state)
-                solution_file.writelines([length, '\n', solution])
+                solution_file.writelines([length, '\n', solution]) if length != "-1" else solution_file.writelines(
+                    [length])
                 statistics_file.write(length)
                 if length != -1:
                     statistics_file.writelines(['\n', str(ol_size),
@@ -290,228 +291,6 @@ if __name__ == '__main__':
 
         solution_file.close()
         statistics_file.close()
-    elif sys.argv[1] == "generate":
-        for uklad in os.listdir("uklady/4x4"):
-            file_path = os.path.join("./uklady/4x4/", uklad)
-            if os.path.isfile(file_path):
-                file = open(file_path)
-                initial_state, target_state = convert_to_boards(file.readlines())
-
-                # OTWIERANIE
-                # rozwiazania
-                solution_file1 = open(f"rozwiazania/{uklad[:-4]}_bfs_RDUL_sol.txt", 'w+')
-                solution_file2 = open(f"rozwiazania/{uklad[:-4]}_bfs_RDLU_sol.txt", 'w+')
-                solution_file3 = open(f"rozwiazania/{uklad[:-4]}_bfs_DRUL_sol.txt", 'w+')
-                solution_file4 = open(f"rozwiazania/{uklad[:-4]}_bfs_DRLU_sol.txt", 'w+')
-                solution_file5 = open(f"rozwiazania/{uklad[:-4]}_bfs_LUDR_sol.txt", 'w+')
-                solution_file6 = open(f"rozwiazania/{uklad[:-4]}_bfs_LURD_sol.txt", 'w+')
-                solution_file7 = open(f"rozwiazania/{uklad[:-4]}_bfs_ULDR_sol.txt", 'w+')
-                solution_file8 = open(f"rozwiazania/{uklad[:-4]}_bfs_ULRD_sol.txt", 'w+')
-
-                solution_file9 = open(f"rozwiazania/{uklad[:-4]}_dfs_RDUL_sol.txt", 'w+')
-                solution_file10 = open(f"rozwiazania/{uklad[:-4]}_dfs_RDLU_sol.txt", 'w+')
-                solution_file11 = open(f"rozwiazania/{uklad[:-4]}_dfs_DRUL_sol.txt", 'w+')
-                solution_file12 = open(f"rozwiazania/{uklad[:-4]}_dfs_DRLU_sol.txt", 'w+')
-                solution_file13 = open(f"rozwiazania/{uklad[:-4]}_dfs_LUDR_sol.txt", 'w+')
-                solution_file14 = open(f"rozwiazania/{uklad[:-4]}_dfs_LURD_sol.txt", 'w+')
-                solution_file15 = open(f"rozwiazania/{uklad[:-4]}_dfs_ULDR_sol.txt", 'w+')
-                solution_file16 = open(f"rozwiazania/{uklad[:-4]}_dfs_ULRD_sol.txt", 'w+')
-
-                solution_file17 = open(f"rozwiazania/{uklad[:-4]}_astr_manh_sol.txt", 'w+')
-                solution_file18 = open(f"rozwiazania/{uklad[:-4]}_astr_hamm_sol.txt", 'w+')
-
-                # statystyki
-                solution_file19 = open(f"statystyki/{uklad[:-4]}_bfs_RDUL_stats.txt", 'w+')
-                solution_file20 = open(f"statystyki/{uklad[:-4]}_bfs_RDLU_stats.txt", 'w+')
-                solution_file21 = open(f"statystyki/{uklad[:-4]}_bfs_DRUL_stats.txt", 'w+')
-                solution_file22 = open(f"statystyki/{uklad[:-4]}_bfs_DRLU_stats.txt", 'w+')
-                solution_file23 = open(f"statystyki/{uklad[:-4]}_bfs_LUDR_stats.txt", 'w+')
-                solution_file24 = open(f"statystyki/{uklad[:-4]}_bfs_LURD_stats.txt", 'w+')
-                solution_file25 = open(f"statystyki/{uklad[:-4]}_bfs_ULDR_stats.txt", 'w+')
-                solution_file26 = open(f"statystyki/{uklad[:-4]}_bfs_ULRD_stats.txt", 'w+')
-
-                solution_file27 = open(f"statystyki/{uklad[:-4]}_dfs_RDUL_stats.txt", 'w+')
-                solution_file28 = open(f"statystyki/{uklad[:-4]}_dfs_RDLU_stats.txt", 'w+')
-                solution_file29 = open(f"statystyki/{uklad[:-4]}_dfs_DRUL_stats.txt", 'w+')
-                solution_file30 = open(f"statystyki/{uklad[:-4]}_dfs_DRLU_stats.txt", 'w+')
-                solution_file31 = open(f"statystyki/{uklad[:-4]}_dfs_LUDR_stats.txt", 'w+')
-                solution_file32 = open(f"statystyki/{uklad[:-4]}_dfs_LURD_stats.txt", 'w+')
-                solution_file33 = open(f"statystyki/{uklad[:-4]}_dfs_ULDR_stats.txt", 'w+')
-                solution_file34 = open(f"statystyki/{uklad[:-4]}_dfs_ULRD_stats.txt", 'w+')
-
-                solution_file35 = open(f"statystyki/{uklad[:-4]}_astr_manh_stats.txt", 'w+')
-                solution_file36 = open(f"statystyki/{uklad[:-4]}_astr_hamm_stats.txt", 'w+')
-
-                # ZAPIS
-                # rozwiazania
-                # bfs
-                length, solution = blind_algorithms("RDUL", "bfs", initial_state, target_state)[:-4]
-                solution_file1.writelines([length, '\n', solution])
-                length, solution = blind_algorithms("RDLU", "bfs", initial_state, target_state)[:-4]
-                solution_file2.writelines([length, '\n', solution])
-                length, solution = blind_algorithms("DRUL", "bfs", initial_state, target_state)[:-4]
-                solution_file3.writelines([length, '\n', solution])
-                length, solution = blind_algorithms("DRLU", "bfs", initial_state, target_state)[:-4]
-                solution_file4.writelines([length, '\n', solution])
-                length, solution = blind_algorithms("LUDR", "bfs", initial_state, target_state)[:-4]
-                solution_file5.writelines([length, '\n', solution])
-                length, solution = blind_algorithms("LURD", "bfs", initial_state, target_state)[:-4]
-                solution_file6.writelines([length, '\n', solution])
-                length, solution = blind_algorithms("ULRD", "bfs", initial_state, target_state)[:-4]
-                solution_file7.writelines([length, '\n', solution])
-                length, solution = blind_algorithms("ULRD", "bfs", initial_state, target_state)[:-4]
-                solution_file8.writelines([length, '\n', solution])
-
-                # dfs
-                length, solution = blind_algorithms("RDUL", "dfs", initial_state, target_state)[:-4]
-                solution_file9.writelines([length, '\n', solution]) if length != "-1" else solution_file9.writelines(
-                    [length])
-                length, solution = blind_algorithms("RDLU", "dfs", initial_state, target_state)[:-4]
-                solution_file10.writelines([length, '\n', solution]) if length != "-1" else solution_file10.writelines(
-                    [length])
-                length, solution = blind_algorithms("DRUL", "dfs", initial_state, target_state)[:-4]
-                solution_file11.writelines([length, '\n', solution]) if length != "-1" else solution_file11.writelines(
-                    [length])
-                length, solution = blind_algorithms("DRLU", "dfs", initial_state, target_state)[:-4]
-                solution_file12.writelines([length, '\n', solution]) if length != "-1" else solution_file12.writelines(
-                    [length])
-                length, solution = blind_algorithms("LUDR", "dfs", initial_state, target_state)[:-4]
-                solution_file13.writelines([length, '\n', solution]) if length != "-1" else solution_file13.writelines(
-                    [length])
-                length, solution = blind_algorithms("LURD", "dfs", initial_state, target_state)[:-4]
-                solution_file14.writelines([length, '\n', solution]) if length != "-1" else solution_file14.writelines(
-                    [length])
-                length, solution = blind_algorithms("ULRD", "dfs", initial_state, target_state)[:-4]
-                solution_file15.writelines([length, '\n', solution]) if length != "-1" else solution_file15.writelines(
-                    [length])
-                length, solution = blind_algorithms("ULRD", "dfs", initial_state, target_state)[:-4]
-                solution_file16.writelines([length, '\n', solution]) if length != "-1" else solution_file16.writelines(
-                    [length])
-
-                # astr
-                length, solution = a_star("manh", initial_state, target_state)[:-4]
-                solution_file17.writelines([length, '\n', solution])
-                length, solution = a_star("hamm", initial_state, target_state)[:-4]
-                solution_file18.writelines([length, '\n', solution])
-
-                # statystyki
-                # bfs
-                length, solution, ol_size, cl_size, depth, time = blind_algorithms("RDUL", "bfs", initial_state,
-                                                                                   target_state)
-                solution_file19.writelines([length, '\n', str(ol_size), '\n', str(cl_size), '\n', str(depth), '\n',
-                                            str(round(time * 1000, 3))])
-                length, solution, ol_size, cl_size, depth, time = blind_algorithms("RDUL", "bfs", initial_state,
-                                                                                   target_state)
-                solution_file20.writelines([length, '\n', str(ol_size), '\n', str(cl_size), '\n', str(depth), '\n',
-                                            str(round(time * 1000, 3))])
-                length, solution, ol_size, cl_size, depth, time = blind_algorithms("RDUL", "bfs", initial_state,
-                                                                                   target_state)
-                solution_file21.writelines([length, '\n', str(ol_size), '\n', str(cl_size), '\n', str(depth), '\n',
-                                            str(round(time * 1000, 3))])
-                length, solution, ol_size, cl_size, depth, time = blind_algorithms("RDUL", "bfs", initial_state,
-                                                                                   target_state)
-                solution_file22.writelines([length, '\n', str(ol_size), '\n', str(cl_size), '\n', str(depth), '\n',
-                                            str(round(time * 1000, 3))])
-                length, solution, ol_size, cl_size, depth, time = blind_algorithms("RDUL", "bfs", initial_state,
-                                                                                   target_state)
-                solution_file23.writelines([length, '\n', str(ol_size), '\n', str(cl_size), '\n', str(depth), '\n',
-                                            str(round(time * 1000, 3))])
-                length, solution, ol_size, cl_size, depth, time = blind_algorithms("RDUL", "bfs", initial_state,
-                                                                                   target_state)
-                solution_file24.writelines([length, '\n', str(ol_size), '\n', str(cl_size), '\n', str(depth), '\n',
-                                            str(round(time * 1000, 3))])
-                length, solution, ol_size, cl_size, depth, time = blind_algorithms("RDUL", "bfs", initial_state,
-                                                                                   target_state)
-                solution_file25.writelines([length, '\n', str(ol_size), '\n', str(cl_size), '\n', str(depth), '\n',
-                                            str(round(time * 1000, 3))])
-                length, solution, ol_size, cl_size, depth, time = blind_algorithms("RDUL", "bfs", initial_state,
-                                                                                   target_state)
-                solution_file26.writelines([length, '\n', str(ol_size), '\n', str(cl_size), '\n', str(depth), '\n',
-                                            str(round(time * 1000, 3))])
-
-                # dfs
-                length, solution, ol_size, cl_size, depth, time = blind_algorithms("RDUL", "dfs", initial_state,
-                                                                                   target_state)
-                solution_file27.writelines([length, '\n', str(ol_size), '\n', str(cl_size), '\n', str(depth), '\n',
-                                            str(round(time * 1000, 3))])
-                length, solution, ol_size, cl_size, depth, time = blind_algorithms("RDUL", "dfs", initial_state,
-                                                                                   target_state)
-                solution_file28.writelines([length, '\n', str(ol_size), '\n', str(cl_size), '\n', str(depth), '\n',
-                                            str(round(time * 1000, 3))])
-                length, solution, ol_size, cl_size, depth, time = blind_algorithms("RDUL", "dfs", initial_state,
-                                                                                   target_state)
-                solution_file29.writelines([length, '\n', str(ol_size), '\n', str(cl_size), '\n', str(depth), '\n',
-                                            str(round(time * 1000, 3))])
-                length, solution, ol_size, cl_size, depth, time = blind_algorithms("RDUL", "dfs", initial_state,
-                                                                                   target_state)
-                solution_file30.writelines([length, '\n', str(ol_size), '\n', str(cl_size), '\n', str(depth), '\n',
-                                            str(round(time * 1000, 3))])
-                length, solution, ol_size, cl_size, depth, time = blind_algorithms("RDUL", "dfs", initial_state,
-                                                                                   target_state)
-                solution_file31.writelines([length, '\n', str(ol_size), '\n', str(cl_size), '\n', str(depth), '\n',
-                                            str(round(time * 1000, 3))])
-                length, solution, ol_size, cl_size, depth, time = blind_algorithms("RDUL", "dfs", initial_state,
-                                                                                   target_state)
-                solution_file32.writelines([length, '\n', str(ol_size), '\n', str(cl_size), '\n', str(depth), '\n',
-                                            str(round(time * 1000, 3))])
-                length, solution, ol_size, cl_size, depth, time = blind_algorithms("RDUL", "dfs", initial_state,
-                                                                                   target_state)
-                solution_file33.writelines([length, '\n', str(ol_size), '\n', str(cl_size), '\n', str(depth), '\n',
-                                            str(round(time * 1000, 3))])
-                length, solution, ol_size, cl_size, depth, time = blind_algorithms("RDUL", "dfs", initial_state,
-                                                                                   target_state)
-                solution_file34.writelines([length, '\n', str(ol_size), '\n', str(cl_size), '\n', str(depth), '\n',
-                                            str(round(time * 1000, 3))])
-
-                # astr
-                length, solution, ol_size, cl_size, depth, time = a_star("manh", initial_state, target_state)
-                solution_file35.writelines([length, '\n', str(ol_size), '\n', str(cl_size), '\n', str(depth), '\n',
-                                            str(round(time * 1000, 3))])
-                length, solution, ol_size, cl_size, depth, time = a_star("hamm", initial_state, target_state)
-                solution_file36.writelines([length, '\n', str(ol_size), '\n', str(cl_size), '\n', str(depth), '\n',
-                                            str(round(time * 1000, 3))])
-
-                # ZAMYKANIE
-                # rozwiazania
-                solution_file1.close()
-                solution_file2.close()
-                solution_file3.close()
-                solution_file4.close()
-                solution_file5.close()
-                solution_file6.close()
-                solution_file7.close()
-                solution_file8.close()
-                solution_file9.close()
-                solution_file10.close()
-                solution_file11.close()
-                solution_file12.close()
-                solution_file13.close()
-                solution_file14.close()
-                solution_file15.close()
-                solution_file16.close()
-                solution_file17.close()
-                solution_file18.close()
-
-                # statystyki
-                solution_file19.close()
-                solution_file20.close()
-                solution_file21.close()
-                solution_file22.close()
-                solution_file23.close()
-                solution_file24.close()
-                solution_file25.close()
-                solution_file26.close()
-                solution_file27.close()
-                solution_file28.close()
-                solution_file29.close()
-                solution_file30.close()
-                solution_file31.close()
-                solution_file32.close()
-                solution_file33.close()
-                solution_file34.close()
-                solution_file35.close()
-                solution_file36.close()
-                print(f"Plik {uklad} zostal policzony.")
     else:
         print("Podaj poprawna ilosc argumentow (5)")
 
