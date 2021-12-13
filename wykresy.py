@@ -134,10 +134,21 @@ file = open("message.txt", "r")
 Lines = file.readlines()
 file.close()
 
-for line in Lines:
-    line.split(" ")
+# for line in Lines:
+#     line.split(" ")
 
-for line in Lines:
+for whatever in Lines:
+    listline = whatever.split(" ")
+    line = [0, 0, "", "", 0, 0, 0, 0, 0.0]
+    line[0] = int(listline[0])
+    line[1] = int(listline[1])
+    line[2] = listline[2]
+    line[3] = listline[3]
+    line[4] = int(listline[4])
+    line[5] = int(listline[5])
+    line[6] = int(listline[6])
+    line[7] = int(listline[7])
+    line[8] = float(listline[8])
     index = int(line[0]) - 1
     if line[2] == "bfs":
         sol_len_bfs[index] += line[4]
@@ -275,18 +286,18 @@ for i in range(7):
     visited_count_astr[i] = visited_count_astr[i] / 826
     processed_count_bfs[i] = processed_count_bfs[i] / 3304
     processed_count_dfs[i] = processed_count_dfs[i] / 3304
-    processed_count_astr[i] = processed_count_astr[i] /  826
+    processed_count_astr[i] = processed_count_astr[i] / 826
     depth_avr_bfs[i] = depth_avr_bfs[i] / 3304
     depth_avr_dfs[i] = depth_avr_dfs[i] / 3304
-    depth_avr_astr[i] = depth_avr_astr[i] /  826
+    depth_avr_astr[i] = depth_avr_astr[i] / 826
     time_avg_bfs[i] = time_avg_bfs[i] / 3304
     time_avg_dfs[i] = time_avg_dfs[i] / 3304
-    time_avg_astr[i] = time_avg_astr[i] /  826
+    time_avg_astr[i] = time_avg_astr[i] / 826
     sol_len_hamm[i] = sol_len_hamm[i] / 413
     sol_len_manh[i] = sol_len_manh[i] / 413
     visited_count_hamm[i] = visited_count_hamm[i] / 413
     visited_count_manh[i] = visited_count_manh[i] / 413
-    processed_count_hamm[i] = processed_count_hamm[i] /  413
+    processed_count_hamm[i] = processed_count_hamm[i] / 413
     processed_count_manh[i] = processed_count_manh[i] / 413
     depth_avr_hamm[i] = depth_avr_hamm[i] / 413
     depth_avr_manh[i] = depth_avr_manh[i] / 413
@@ -373,43 +384,43 @@ for i in range(7):
     time_avg_dfs_uldr[i] = time_avg_dfs_uldr[i] / 413
     time_avg_dfs_ulrd[i] = time_avg_dfs_ulrd[i] / 413
 
-
-
 # 1
-# X = ['1', '2', '3', '4', '5', '6', '7']
-# X_axis = np.arange(len(X))
-# plt.bar(X_axis - 0.2, sol_len_bfs, 0.4, label = 'BFS')
-# plt.bar(X_axis + 0.2, sol_len_dfs, 0.4, label = 'DFS')
-# plt.bar(X_axis + 0.2, sol_len_astr, 0.4, label = 'A*')
-#
-# plt.xticks(X_axis, X)
-# plt.xlabel("Głebokość")
-# plt.ylabel("Długość znalezionego rozwiązania")
-# plt.title("Ogółem")
-# plt.legend()
-# plt.show()
+X = ['1', '2', '3', '4', '5', '6', '7']
+X_axis = np.arange(len(X))
+plt.bar(X_axis - 0.2, sol_len_bfs, 0.2, label='BFS')
+plt.bar(X_axis, sol_len_dfs, 0.2, label='DFS')
+plt.bar(X_axis + 0.2, sol_len_astr, 0.2, label='A*')
 
-#2
+plt.xticks(X_axis, X)
+plt.xlabel("Głebokość")
+plt.ylabel("Długość znalezionego rozwiązania")
+plt.title("Ogółem")
+plt.yscale('log')
+plt.legend()
+plt.show()
+
+# 2
 # X = ['1', '2', '3', '4', '5', '6', '7']
 # X_axis = np.arange(len(X))
-# plt.bar(X_axis - 0.2, visited_count_bfs, 0.4, label = 'BFS')
-# plt.bar(X_axis + 0.2, visited_count_dfs, 0.4, label = 'DFS')
-# plt.bar(X_axis + 0.2, visited_count_astr, 0.4, label = 'A*')
+# plt.bar(X_axis - 0.2, visited_count_bfs, 0.2, label = 'BFS')
+# plt.bar(X_axis, visited_count_dfs, 0.2, label = 'DFS')
+# plt.bar(X_axis + 0.2, visited_count_astr, 0.2, label = 'A*')
 #
 # plt.xticks(X_axis, X)
 # plt.xlabel("Głebokość")
 # plt.ylabel("Liczba stanów odwiedzonych")
+# plt.yscale('log')
 # plt.title("Ogółem")
 # plt.legend()
 # plt.show()
 
 
-#3
+# 3
 # X = ['1', '2', '3', '4', '5', '6', '7']
 # X_axis = np.arange(len(X))
-# plt.bar(X_axis - 0.2, processed_count_bfs, 0.4, label = 'BFS')
-# plt.bar(X_axis + 0.2, processed_count_dfs, 0.4, label = 'DFS')
-# plt.bar(X_axis + 0.2, processed_count_astr , 0.4, label = 'A*')
+# plt.bar(X_axis - 0.2, processed_count_bfs, 0.2, label = 'BFS')
+# plt.bar(X_axis, processed_count_dfs, 0.2, label = 'DFS')
+# plt.bar(X_axis + 0.2, processed_count_astr , 0.2, label = 'A*')
 #
 # plt.xticks(X_axis, X)
 # plt.xlabel("Głebokość")
@@ -418,12 +429,12 @@ for i in range(7):
 # plt.legend()
 # plt.show()
 
-#4
+# 4
 # X = ['1', '2', '3', '4', '5', '6', '7']
 # X_axis = np.arange(len(X))
-# plt.bar(X_axis - 0.2, depth_avr_bfs, 0.4, label = 'BFS')
-# plt.bar(X_axis + 0.2, depth_avr_dfs, 0.4, label = 'DFS')
-# plt.bar(X_axis + 0.2, depth_avr_astr, 0.4, label = 'A*')
+# plt.bar(X_axis - 0.2, depth_avr_bfs, 0.2, label = 'BFS')
+# plt.bar(X_axis, depth_avr_dfs, 0.2, label = 'DFS')
+# plt.bar(X_axis + 0.2, depth_avr_astr, 0.2, label = 'A*')
 #
 # plt.xticks(X_axis, X)
 # plt.xlabel("Głebokość")
@@ -432,12 +443,12 @@ for i in range(7):
 # plt.legend()
 # plt.show()
 
-#5
+# 5
 # X = ['1', '2', '3', '4', '5', '6', '7']
 # X_axis = np.arange(len(X))
-# plt.bar(X_axis - 0.2, time_avg_bfs , 0.4, label = 'BFS')
-# plt.bar(X_axis + 0.2, time_avg_dfs, 0.4, label = 'DFS')
-# plt.bar(X_axis + 0.2, time_avg_astr, 0.4, label = 'A*')
+# plt.bar(X_axis - 0.2, time_avg_bfs , 0.2, label = 'BFS')
+# plt.bar(X_axis, time_avg_dfs, 0.2, label = 'DFS')
+# plt.bar(X_axis + 0.2, time_avg_astr, 0.2, label = 'A*')
 #
 # plt.xticks(X_axis, X)
 # plt.xlabel("Głebokość")
@@ -445,8 +456,6 @@ for i in range(7):
 # plt.title("Ogółem")
 # plt.legend()
 # plt.show()
-
-
 
 
 # 6
@@ -462,7 +471,7 @@ for i in range(7):
 # plt.legend()
 # plt.show()
 
-#7
+# 7
 # X = ['1', '2', '3', '4', '5', '6', '7']
 # X_axis = np.arange(len(X))
 # plt.bar(X_axis - 0.2, visited_count_manh, 0.4, label = 'Manhattan')
@@ -476,7 +485,7 @@ for i in range(7):
 # plt.show()
 
 
-#8
+# 8
 # X = ['1', '2', '3', '4', '5', '6', '7']
 # X_axis = np.arange(len(X))
 # plt.bar(X_axis - 0.2, processed_count_manh, 0.4, label = 'Manhattan')
@@ -489,7 +498,7 @@ for i in range(7):
 # plt.legend()
 # plt.show()
 
-#9
+# 9
 # X = ['1', '2', '3', '4', '5', '6', '7']
 # X_axis = np.arange(len(X))
 # plt.bar(X_axis - 0.2, depth_avr_manh, 0.4, label = 'Manhattan')
@@ -502,7 +511,7 @@ for i in range(7):
 # plt.legend()
 # plt.show()
 
-#10
+# 10
 # X = ['1', '2', '3', '4', '5', '6', '7']
 # X_axis = np.arange(len(X))
 # plt.bar(X_axis - 0.2, time_avg_manh, 0.4, label = 'Manhattan')
@@ -516,18 +525,17 @@ for i in range(7):
 # plt.show()
 
 
-
 # 11
 # X = ['1', '2', '3', '4', '5', '6', '7']
 # X_axis = np.arange(len(X))
-# plt.bar(X_axis - 0.2, sol_len_bfs_rdul, 0.4, label = 'RDUL')
-# plt.bar(X_axis + 0.2, sol_len_bfs_rdlu, 0.4, label = 'RDLU')
-# plt.bar(X_axis - 0.2, sol_len_bfs_drul, 0.4, label = 'DRUL')
-# plt.bar(X_axis + 0.2, sol_len_bfs_drlu, 0.4, label = 'DRLU')
-# plt.bar(X_axis - 0.2, sol_len_bfs_ludr, 0.4, label = 'LUDR')
-# plt.bar(X_axis + 0.2, sol_len_bfs_lurd, 0.4, label = 'LURD')
-# plt.bar(X_axis - 0.2, sol_len_bfs_uldr, 0.4, label = 'ULDR')
-# plt.bar(X_axis + 0.2, sol_len_bfs_ulrd, 0.4, label = 'ULRD')
+# plt.bar(X_axis - 0.4, sol_len_bfs_rdul, 0.1, label = 'RDUL')
+# plt.bar(X_axis - 0.3, sol_len_bfs_rdlu, 0.1, label = 'RDLU')
+# plt.bar(X_axis - 0.2, sol_len_bfs_drul, 0.1, label = 'DRUL')
+# plt.bar(X_axis - 0.1, sol_len_bfs_drlu, 0.1, label = 'DRLU')
+# plt.bar(X_axis      , sol_len_bfs_ludr, 0.1, label = 'LUDR')
+# plt.bar(X_axis + 0.1, sol_len_bfs_lurd, 0.1, label = 'LURD')
+# plt.bar(X_axis + 0.2, sol_len_bfs_uldr, 0.1, label = 'ULDR')
+# plt.bar(X_axis + 0.3, sol_len_bfs_ulrd, 0.1, label = 'ULRD')
 #
 # plt.xticks(X_axis, X)
 # plt.xlabel("Głebokość")
@@ -536,27 +544,28 @@ for i in range(7):
 # plt.legend()
 # plt.show()
 
-#12
+# 12
 # X = ['1', '2', '3', '4', '5', '6', '7']
 # X_axis = np.arange(len(X))
-# plt.bar(X_axis - 0.2, visited_count_bfs_rdul, 0.4, label = 'RDUL')
-# plt.bar(X_axis + 0.2, visited_count_bfs_rdlu, 0.4, label = 'RDLU')
-# plt.bar(X_axis - 0.2, visited_count_bfs_drul, 0.4, label = 'DRUL')
-# plt.bar(X_axis + 0.2, visited_count_bfs_drlu, 0.4, label = 'DRLU')
-# plt.bar(X_axis - 0.2, visited_count_bfs_ludr, 0.4, label = 'LUDR')
-# plt.bar(X_axis + 0.2, visited_count_bfs_lurd, 0.4, label = 'LURD')
-# plt.bar(X_axis - 0.2, visited_count_bfs_uldr, 0.4, label = 'ULDR')
-# plt.bar(X_axis + 0.2, visited_count_bfs_ulrd, 0.4, label = 'ULRD')
+# plt.bar(X_axis - 0.4, visited_count_bfs_rdul, 0.1, label = 'RDUL')
+# plt.bar(X_axis - 0.3, visited_count_bfs_rdlu, 0.1, label = 'RDLU')
+# plt.bar(X_axis - 0.2, visited_count_bfs_drul, 0.1, label = 'DRUL')
+# plt.bar(X_axis - 0.1, visited_count_bfs_drlu, 0.1, label = 'DRLU')
+# plt.bar(X_axis      , visited_count_bfs_ludr, 0.1, label = 'LUDR')
+# plt.bar(X_axis + 0.1, visited_count_bfs_lurd, 0.1, label = 'LURD')
+# plt.bar(X_axis + 0.2, visited_count_bfs_uldr, 0.1, label = 'ULDR')
+# plt.bar(X_axis + 0.3, visited_count_bfs_ulrd, 0.1, label = 'ULRD')
 #
 # plt.xticks(X_axis, X)
 # plt.xlabel("Głebokość")
 # plt.ylabel("Liczba stanów odwiedzonych")
+# plt.yscale('log')
 # plt.title("BFS")
 # plt.legend()
 # plt.show()
 
 
-#13
+# 13
 # X = ['1', '2', '3', '4', '5', '6', '7']
 # X_axis = np.arange(len(X))
 # plt.bar(X_axis - 0.2, processed_count_bfs_rdul, 0.4, label = 'RDUL')
@@ -575,7 +584,7 @@ for i in range(7):
 # plt.legend()
 # plt.show()
 
-#14
+# 14
 # X = ['1', '2', '3', '4', '5', '6', '7']
 # X_axis = np.arange(len(X))
 # plt.bar(X_axis - 0.2, depth_avr_bfs_rdul, 0.4, label = 'RDUL')
@@ -594,7 +603,7 @@ for i in range(7):
 # plt.legend()
 # plt.show()
 
-#15
+# 15
 # X = ['1', '2', '3', '4', '5', '6', '7']
 # X_axis = np.arange(len(X))
 # plt.bar(X_axis - 0.2, time_avg_bfs_rdul, 0.4, label = 'RDUL')
@@ -633,7 +642,7 @@ for i in range(7):
 # plt.legend()
 # plt.show()
 
-#17
+# 17
 # X = ['1', '2', '3', '4', '5', '6', '7']
 # X_axis = np.arange(len(X))
 # plt.bar(X_axis - 0.2, visited_count_dfs_rdul, 0.4, label = 'RDUL')
@@ -653,7 +662,7 @@ for i in range(7):
 # plt.show()
 
 
-#18
+# 18
 # X = ['1', '2', '3', '4', '5', '6', '7']
 # X_axis = np.arange(len(X))
 # plt.bar(X_axis - 0.2, processed_count_dfs_rdul, 0.4, label = 'RDUL')
@@ -672,7 +681,7 @@ for i in range(7):
 # plt.legend()
 # plt.show()
 
-#19
+# 19
 # X = ['1', '2', '3', '4', '5', '6', '7']d
 # X_axis = np.arange(len(X))
 # plt.bar(X_axis - 0.2, depth_avr_dfs_rdul, 0.4, label = 'RDUL')
@@ -691,7 +700,7 @@ for i in range(7):
 # plt.legend()
 # plt.show()
 
-#20
+# 20
 # X = ['1', '2', '3', '4', '5', '6', '7']
 # X_axis = np.arange(len(X))
 # plt.bar(X_axis - 0.2, time_avg_dfs_rdul, 0.4, label = 'RDUL')
