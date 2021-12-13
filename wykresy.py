@@ -3,220 +3,123 @@ import numpy as np
 
 # ogółem
 sol_len_bfs = [0, 0, 0, 0, 0, 0, 0]
-sol_len_bfs_counter = 0
 sol_len_dfs = [0, 0, 0, 0, 0, 0, 0]
-sol_len_dfs_counter = 0
 sol_len_astr = [0, 0, 0, 0, 0, 0, 0]
-sol_len_astr_counter = 0
 
 visited_count_bfs = [0, 0, 0, 0, 0, 0, 0]
-visited_count_bfs_counter = 0
 visited_count_dfs = [0, 0, 0, 0, 0, 0, 0]
-visited_count_dfs_counter = 0
 visited_count_astr = [0, 0, 0, 0, 0, 0, 0]
-visited_count_astr_counter = 0
 
 processed_count_bfs = [0, 0, 0, 0, 0, 0, 0]
-processed_count_bfs_counter = 0
 processed_count_dfs = [0, 0, 0, 0, 0, 0, 0]
-processed_count_dfs_counter = 0
 processed_count_astr = [0, 0, 0, 0, 0, 0, 0]
-processed_count_astr_counter = 0
 
 depth_avr_bfs = [0, 0, 0, 0, 0, 0, 0]
-depth_avr_bfs_counter = 0
 depth_avr_dfs = [0, 0, 0, 0, 0, 0, 0]
-depth_avr_dfs_counter = 0
 depth_avr_astr = [0, 0, 0, 0, 0, 0, 0]
-depth_avr_astr_counter = 0
 
 time_avg_bfs = [0, 0, 0, 0, 0, 0, 0]
-time_avg_bfs_counter = 0
 time_avg_dfs = [0, 0, 0, 0, 0, 0, 0]
-time_avg_dfs_counter = 0
 time_avg_astr = [0, 0, 0, 0, 0, 0, 0]
-time_avg_astr_counter = 0
 
 # A*
 sol_len_hamm = [0, 0, 0, 0, 0, 0, 0]
-sol_len_hamm_counter = 0
 sol_len_manh = [0, 0, 0, 0, 0, 0, 0]
-sol_len_manh_counter = 0
 
 visited_count_hamm = [0, 0, 0, 0, 0, 0, 0]
-visited_count_hamm_counter = 0
 visited_count_manh = [0, 0, 0, 0, 0, 0, 0]
-visited_count_manh_counter = 0
 
 processed_count_hamm = [0, 0, 0, 0, 0, 0, 0]
-processed_count_hamm_counter = 0
 processed_count_manh = [0, 0, 0, 0, 0, 0, 0]
-processed_count_manh_counter = 0
 
 depth_avr_hamm = [0, 0, 0, 0, 0, 0, 0]
-depth_avr_hamm_counter = 0
 depth_avr_manh = [0, 0, 0, 0, 0, 0, 0]
-depth_avr_manh_counter = 0
 
 time_avg_hamm = [0, 0, 0, 0, 0, 0, 0]
-time_avg_hamm_counter = 0
 time_avg_manh = [0, 0, 0, 0, 0, 0, 0]
-time_avg_manh_counter = 0
 
 # bfs
 sol_len_bfs_rdul = [0, 0, 0, 0, 0, 0, 0]
-sol_len_bfs_rdul_counter = 0
 sol_len_bfs_rdlu = [0, 0, 0, 0, 0, 0, 0]
-sol_len_bfs_rdlu_counter = 0
 sol_len_bfs_drul = [0, 0, 0, 0, 0, 0, 0]
-sol_len_bfs_drul_counter = 0
 sol_len_bfs_drlu = [0, 0, 0, 0, 0, 0, 0]
-sol_len_bfs_drlu_counter = 0
 sol_len_bfs_ludr = [0, 0, 0, 0, 0, 0, 0]
-sol_len_bfs_ludr_counter = 0
 sol_len_bfs_lurd = [0, 0, 0, 0, 0, 0, 0]
-sol_len_bfs_lurd_counter = 0
 sol_len_bfs_uldr = [0, 0, 0, 0, 0, 0, 0]
-sol_len_bfs_uldr_counter = 0
 sol_len_bfs_ulrd = [0, 0, 0, 0, 0, 0, 0]
-sol_len_bfs_ulrd_counter = 0
 
 visited_count_bfs_rdul = [0, 0, 0, 0, 0, 0, 0]
-visited_count_bfs_rdul_counter = 0
 visited_count_bfs_rdlu = [0, 0, 0, 0, 0, 0, 0]
-visited_count_bfs_rdlu_counter = 0
 visited_count_bfs_drul = [0, 0, 0, 0, 0, 0, 0]
-visited_count_bfs_drul_counter = 0
 visited_count_bfs_drlu = [0, 0, 0, 0, 0, 0, 0]
-visited_count_bfs_drlu_counter = 0
 visited_count_bfs_ludr = [0, 0, 0, 0, 0, 0, 0]
-visited_count_bfs_ludr_counter = 0
 visited_count_bfs_lurd = [0, 0, 0, 0, 0, 0, 0]
-visited_count_bfs_lurd_counter = 0
 visited_count_bfs_uldr = [0, 0, 0, 0, 0, 0, 0]
-visited_count_bfs_uldr_counter = 0
 visited_count_bfs_ulrd = [0, 0, 0, 0, 0, 0, 0]
-visited_count_bfs_ulrd_counter = 0
 
 processed_count_bfs_rdul = [0, 0, 0, 0, 0, 0, 0]
-processed_count_bfs_rdul_counter = 0
 processed_count_bfs_rdlu = [0, 0, 0, 0, 0, 0, 0]
-processed_count_bfs_rdlu_counter = 0
 processed_count_bfs_drul = [0, 0, 0, 0, 0, 0, 0]
-processed_count_bfs_drul_counter = 0
 processed_count_bfs_drlu = [0, 0, 0, 0, 0, 0, 0]
-processed_count_bfs_drlu_counter = 0
 processed_count_bfs_ludr = [0, 0, 0, 0, 0, 0, 0]
-processed_count_bfs_ludr_counter = 0
 processed_count_bfs_lurd = [0, 0, 0, 0, 0, 0, 0]
-processed_count_bfs_lurd_counter = 0
 processed_count_bfs_uldr = [0, 0, 0, 0, 0, 0, 0]
-processed_count_bfs_uldr_counter = 0
 processed_count_bfs_ulrd = [0, 0, 0, 0, 0, 0, 0]
-processed_count_bfs_ulrd_counter = 0
 
 depth_avr_bfs_rdul = [0, 0, 0, 0, 0, 0, 0]
-depth_avr_bfs_rdul_counter = 0
 depth_avr_bfs_rdlu = [0, 0, 0, 0, 0, 0, 0]
-depth_avr_bfs_rdlu_counter = 0
 depth_avr_bfs_drul = [0, 0, 0, 0, 0, 0, 0]
-depth_avr_bfs_drul_counter = 0
 depth_avr_bfs_drlu = [0, 0, 0, 0, 0, 0, 0]
-depth_avr_bfs_drlu_counter = 0
 depth_avr_bfs_ludr = [0, 0, 0, 0, 0, 0, 0]
-depth_avr_bfs_ludr_counter = 0
 depth_avr_bfs_lurd = [0, 0, 0, 0, 0, 0, 0]
-depth_avr_bfs_lurd_counter = 0
 depth_avr_bfs_uldr = [0, 0, 0, 0, 0, 0, 0]
-depth_avr_bfs_uldr_counter = 0
 depth_avr_bfs_ulrd = [0, 0, 0, 0, 0, 0, 0]
-depth_avr_bfs_ulrd_counter = 0
 
 time_avg_bfs_rdul = [0, 0, 0, 0, 0, 0, 0]
-time_avg_bfs_rdul_counter = 0
 time_avg_bfs_rdlu = [0, 0, 0, 0, 0, 0, 0]
-time_avg_bfs_rdlu_counter = 0
 time_avg_bfs_drul = [0, 0, 0, 0, 0, 0, 0]
-time_avg_bfs_drul_counter = 0
 time_avg_bfs_drlu = [0, 0, 0, 0, 0, 0, 0]
-time_avg_bfs_drlu_counter = 0
 time_avg_bfs_ludr = [0, 0, 0, 0, 0, 0, 0]
-time_avg_bfs_ludr_counter = 0
 time_avg_bfs_lurd = [0, 0, 0, 0, 0, 0, 0]
-time_avg_bfs_lurd_counter = 0
 time_avg_bfs_uldr = [0, 0, 0, 0, 0, 0, 0]
-time_avg_bfs_uldr_counter = 0
 time_avg_bfs_ulrd = [0, 0, 0, 0, 0, 0, 0]
-time_avg_bfs_ulrd_counter = 0
 
 # dfs
 sol_len_dfs_rdul = [0, 0, 0, 0, 0, 0, 0]
-sol_len_dfs_rdul_counter = 0
 sol_len_dfs_rdlu = [0, 0, 0, 0, 0, 0, 0]
-sol_len_dfs_rdlu_counter = 0
 sol_len_dfs_drul = [0, 0, 0, 0, 0, 0, 0]
-sol_len_dfs_drul_counter = 0
 sol_len_dfs_drlu = [0, 0, 0, 0, 0, 0, 0]
-sol_len_dfs_drlu_counter = 0
 sol_len_dfs_ludr = [0, 0, 0, 0, 0, 0, 0]
-sol_len_dfs_ludr_counter = 0
 sol_len_dfs_lurd = [0, 0, 0, 0, 0, 0, 0]
-sol_len_dfs_lurd_counter = 0
 sol_len_dfs_uldr = [0, 0, 0, 0, 0, 0, 0]
-sol_len_dfs_uldr_counter = 0
 sol_len_dfs_ulrd = [0, 0, 0, 0, 0, 0, 0]
-sol_len_dfs_ulrd_counter = 0
 
 visited_count_dfs_rdul = [0, 0, 0, 0, 0, 0, 0]
-visited_count_dfs_rdul_counter = 0
 visited_count_dfs_rdlu = [0, 0, 0, 0, 0, 0, 0]
-visited_count_dfs_rdlu_counter = 0
 visited_count_dfs_drul = [0, 0, 0, 0, 0, 0, 0]
-visited_count_dfs_drul_counter = 0
 visited_count_dfs_drlu = [0, 0, 0, 0, 0, 0, 0]
-visited_count_dfs_drlu_counter = 0
 visited_count_dfs_ludr = [0, 0, 0, 0, 0, 0, 0]
-visited_count_dfs_ludr_counter = 0
 visited_count_dfs_lurd = [0, 0, 0, 0, 0, 0, 0]
-visited_count_dfs_lurd_counter = 0
 visited_count_dfs_uldr = [0, 0, 0, 0, 0, 0, 0]
-visited_count_dfs_uldr_counter = 0
 visited_count_dfs_ulrd = [0, 0, 0, 0, 0, 0, 0]
-visited_count_dfs_ulrd_counter = 0
 
 processed_count_dfs_rdul = [0, 0, 0, 0, 0, 0, 0]
-processed_count_dfs_rdul_counter = 0
 processed_count_dfs_rdlu = [0, 0, 0, 0, 0, 0, 0]
-processed_count_dfs_rdlu_counter = 0
 processed_count_dfs_drul = [0, 0, 0, 0, 0, 0, 0]
-processed_count_dfs_drul_counter = 0
 processed_count_dfs_drlu = [0, 0, 0, 0, 0, 0, 0]
-processed_count_dfs_drlu_counter = 0
 processed_count_dfs_ludr = [0, 0, 0, 0, 0, 0, 0]
-processed_count_dfs_ludr_counter = 0
 processed_count_dfs_lurd = [0, 0, 0, 0, 0, 0, 0]
-processed_count_dfs_lurd_counter = 0
 processed_count_dfs_uldr = [0, 0, 0, 0, 0, 0, 0]
-processed_count_dfs_uldr_counter = 0
 processed_count_dfs_ulrd = [0, 0, 0, 0, 0, 0, 0]
-processed_count_dfs_ulrd_counter = 0
 
 depth_avr_dfs_rdul = [0, 0, 0, 0, 0, 0, 0]
-depth_avr_dfs_rdul_counter = 0
 depth_avr_dfs_rdlu = [0, 0, 0, 0, 0, 0, 0]
-depth_avr_dfs_rdlu_counter = 0
 depth_avr_dfs_drul = [0, 0, 0, 0, 0, 0, 0]
-depth_avr_dfs_drul_counter = 0
 depth_avr_dfs_drlu = [0, 0, 0, 0, 0, 0, 0]
-depth_avr_dfs_drlu_counter = 0
 depth_avr_dfs_ludr = [0, 0, 0, 0, 0, 0, 0]
-depth_avr_dfs_ludr_counter = 0
 depth_avr_dfs_lurd = [0, 0, 0, 0, 0, 0, 0]
-depth_avr_dfs_lurd_counter = 0
 depth_avr_dfs_uldr = [0, 0, 0, 0, 0, 0, 0]
-depth_avr_dfs_uldr_counter = 0
 depth_avr_dfs_ulrd = [0, 0, 0, 0, 0, 0, 0]
-depth_avr_dfs_ulrd_counter = 0
 
 time_avg_dfs_rdul = [0, 0, 0, 0, 0, 0, 0]
 time_avg_dfs_rdlu = [0, 0, 0, 0, 0, 0, 0]
