@@ -293,29 +293,3 @@ if __name__ == '__main__':
         statistics_file.close()
     else:
         print("Podaj poprawna ilosc argumentow (5)")
-
-    # '''
-    #             TO DO:
-    #             1. Statystyki
-    #             2. Tworzenie plików wynikowych jesli ich nie ma
-    #             3. Sprawdzić czy wszystko działa
-    # '''
-    #
-    # step_t = Step(None, None, moves, TARGET_STATE)
-    # step_e = Step(None, None, moves, EXPERIMENTAL_STATE)
-    # print(bfs(ORDER, INITIAL_STATE, TARGET_STATE))
-    #     print(DFS_iterative(ORDER, INITIAL_STATE, TARGET_STATE))
-    # print(DFS_iterative())
-
-    # depth = "03"
-    # file = open(f"uklady/4x4/4x4_{depth}_00002.txt", 'r')
-    #
-    # tar_state = [[1, 2, 3, 4],
-    #              [5, 6, 7, 8],
-    #              [9, 10, 11, 12],
-    #              [13, 14, 15, 0]]
-    #
-    # initial_state = convert_to_boards(file.readlines())[0]
-    # file.close()
-    #
-    # print(blind_algorithms("RDUL", "dfs", initial_state, tar_state))
