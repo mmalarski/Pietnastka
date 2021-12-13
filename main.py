@@ -4,6 +4,7 @@ import time as t
 import os
 import sys
 
+
 DEPTH = 20
 TARGET_STATE = []
 
