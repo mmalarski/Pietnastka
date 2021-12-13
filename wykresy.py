@@ -31,7 +31,22 @@ dfs_ulrd = []
 astr_manh =[]
 astr_hamm = []
 
+bfs = []
+dfs = []
+astr = []
+
 
 
 file = open("message.txt", "r")
+
+Lines = file.readlines()
 file.close()
+
+# Strips the newline character
+count = 0
+while Lines[count][0]:
+    count = count + 1
+
+
+
+
