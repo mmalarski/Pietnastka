@@ -393,9 +393,10 @@ for i in range(7):
 # 1
 # X = ['1', '2', '3', '4', '5', '6', '7']
 # X_axis = np.arange(len(X))
-# plt.bar(X_axis - 0.2, sol_len_bfs, 0.2, label='BFS')
-# plt.bar(X_axis, sol_len_dfs, 0.2, label='DFS')
-# plt.bar(X_axis + 0.2, sol_len_astr, 0.2, label='A*')
+# plt.grid(True, 'both', 'y', zorder = 0)
+# plt.bar(X_axis - 0.2, sol_len_bfs, 0.2, label='BFS', zorder = 3)
+# plt.bar(X_axis, sol_len_dfs, 0.2, label='DFS', zorder = 3)
+# plt.bar(X_axis + 0.2, sol_len_astr, 0.2, label='A*', zorder = 3)
 #
 # plt.xticks(X_axis, X)
 # plt.xlabel("Głebokość")
@@ -407,9 +408,10 @@ for i in range(7):
 # 2
 # X = ['1', '2', '3', '4', '5', '6', '7']
 # X_axis = np.arange(len(X))
-# plt.bar(X_axis - 0.2, visited_count_bfs, 0.2, label = 'BFS')
-# plt.bar(X_axis, visited_count_dfs, 0.2, label = 'DFS')
-# plt.bar(X_axis + 0.2, visited_count_astr, 0.2, label = 'A*')
+# plt.grid(True, 'both', 'y', zorder = 0)
+# plt.bar(X_axis - 0.2, visited_count_bfs, 0.2, label = 'BFS', zorder = 3)
+# plt.bar(X_axis, visited_count_dfs, 0.2, label = 'DFS', zorder = 3)
+# plt.bar(X_axis + 0.2, visited_count_astr, 0.2, label = 'A*', zorder = 3)
 #
 # plt.xticks(X_axis, X)
 # plt.xlabel("Głebokość")
@@ -423,9 +425,10 @@ for i in range(7):
 # 3
 # X = ['1', '2', '3', '4', '5', '6', '7']
 # X_axis = np.arange(len(X))
-# plt.bar(X_axis - 0.2, processed_count_bfs, 0.2, label = 'BFS')
-# plt.bar(X_axis, processed_count_dfs, 0.2, label = 'DFS')
-# plt.bar(X_axis + 0.2, processed_count_astr , 0.2, label = 'A*')
+# plt.grid(True, 'both', 'y', zorder = 0)
+# plt.bar(X_axis - 0.2, processed_count_bfs, 0.2, label = 'BFS', zorder = 3)
+# plt.bar(X_axis, processed_count_dfs, 0.2, label = 'DFS', zorder = 3)
+# plt.bar(X_axis + 0.2, processed_count_astr , 0.2, label = 'A*', zorder = 3)
 #
 # plt.xticks(X_axis, X)
 # plt.xlabel("Głebokość")
@@ -438,9 +441,10 @@ for i in range(7):
 # 4
 # X = ['1', '2', '3', '4', '5', '6', '7']
 # X_axis = np.arange(len(X))
-# plt.bar(X_axis - 0.2, depth_avr_bfs, 0.2, label = 'BFS')
-# plt.bar(X_axis, depth_avr_dfs, 0.2, label = 'DFS')
-# plt.bar(X_axis + 0.2, depth_avr_astr, 0.2, label = 'A*')
+# plt.grid(True, 'both', 'y', zorder = 0)
+# plt.bar(X_axis - 0.2, depth_avr_bfs, 0.2, label = 'BFS', zorder = 3)
+# plt.bar(X_axis, depth_avr_dfs, 0.2, label = 'DFS', zorder = 3)
+# plt.bar(X_axis + 0.2, depth_avr_astr, 0.2, label = 'A*', zorder = 3)
 #
 # plt.xticks(X_axis, X)
 # plt.xlabel("Głebokość")
@@ -452,9 +456,10 @@ for i in range(7):
 # 5
 # X = ['1', '2', '3', '4', '5', '6', '7']
 # X_axis = np.arange(len(X))
-# plt.bar(X_axis - 0.2, time_avg_bfs , 0.2, label = 'BFS')
-# plt.bar(X_axis, time_avg_dfs, 0.2, label = 'DFS')
-# plt.bar(X_axis + 0.2, time_avg_astr, 0.2, label = 'A*')
+# plt.grid(True, 'both', 'y', zorder = 0)
+# plt.bar(X_axis - 0.2, time_avg_bfs , 0.2, label = 'BFS', zorder = 3)
+# plt.bar(X_axis, time_avg_dfs, 0.2, label = 'DFS', zorder = 3)
+# plt.bar(X_axis + 0.2, time_avg_astr, 0.2, label = 'A*', zorder = 3)
 #
 # plt.xticks(X_axis, X)
 # plt.xlabel("Głebokość")
@@ -468,8 +473,9 @@ for i in range(7):
 # 6
 # X = ['1', '2', '3', '4', '5', '6', '7']
 # X_axis = np.arange(len(X))
-# plt.bar(X_axis - 0.2, sol_len_manh, 0.4, label = 'Manhattan')
-# plt.bar(X_axis + 0.2, sol_len_hamm, 0.4, label = 'Hamming')
+# plt.grid(True, 'both', 'y', zorder = 0)
+# plt.bar(X_axis - 0.2, sol_len_manh, 0.4, label = 'Manhattan', zorder = 3)
+# plt.bar(X_axis + 0.2, sol_len_hamm, 0.4, label = 'Hamming', zorder = 3)
 #
 # plt.xticks(X_axis, X)
 # plt.xlabel("Głebokość")
@@ -481,8 +487,9 @@ for i in range(7):
 # 7
 # X = ['1', '2', '3', '4', '5', '6', '7']
 # X_axis = np.arange(len(X))
-# plt.bar(X_axis - 0.2, visited_count_manh, 0.4, label = 'Manhattan')
-# plt.bar(X_axis + 0.2, visited_count_hamm, 0.4, label = 'Hamming')
+# plt.grid(True, 'both', 'y', zorder = 0)
+# plt.bar(X_axis - 0.2, visited_count_manh, 0.4, label = 'Manhattan', zorder = 3)
+# plt.bar(X_axis + 0.2, visited_count_hamm, 0.4, label = 'Hamming', zorder = 3)
 #
 # plt.xticks(X_axis, X)
 # plt.xlabel("Głebokość")
@@ -495,8 +502,9 @@ for i in range(7):
 # 8
 # X = ['1', '2', '3', '4', '5', '6', '7']
 # X_axis = np.arange(len(X))
-# plt.bar(X_axis - 0.2, processed_count_manh, 0.4, label = 'Manhattan')
-# plt.bar(X_axis + 0.2, processed_count_hamm, 0.4, label = 'Hamming')
+# plt.grid(True, 'both', 'y', zorder = 0)
+# plt.bar(X_axis - 0.2, processed_count_manh, 0.4, label = 'Manhattan', zorder = 3)
+# plt.bar(X_axis + 0.2, processed_count_hamm, 0.4, label = 'Hamming', zorder = 3)
 #
 # plt.xticks(X_axis, X)
 # plt.xlabel("Głebokość")
@@ -508,8 +516,9 @@ for i in range(7):
 # 9
 # X = ['1', '2', '3', '4', '5', '6', '7']
 # X_axis = np.arange(len(X))
-# plt.bar(X_axis - 0.2, depth_avr_manh, 0.4, label = 'Manhattan')
-# plt.bar(X_axis + 0.2, depth_avr_hamm, 0.4, label = 'Hamming')
+# plt.grid(True, 'both', 'y', zorder = 0)
+# plt.bar(X_axis - 0.2, depth_avr_manh, 0.4, label = 'Manhattan', zorder = 3)
+# plt.bar(X_axis + 0.2, depth_avr_hamm, 0.4, label = 'Hamming', zorder = 3)
 #
 # plt.xticks(X_axis, X)
 # plt.xlabel("Głebokość")
@@ -521,8 +530,9 @@ for i in range(7):
 # 10
 # X = ['1', '2', '3', '4', '5', '6', '7']
 # X_axis = np.arange(len(X))
-# plt.bar(X_axis - 0.2, time_avg_manh, 0.4, label = 'Manhattan')
-# plt.bar(X_axis + 0.2, time_avg_hamm, 0.4, label = 'Hamming')
+# plt.grid(True, 'both', 'y', zorder = 0)
+# plt.bar(X_axis - 0.2, time_avg_manh, 0.4, label = 'Manhattan', zorder = 3)
+# plt.bar(X_axis + 0.2, time_avg_hamm, 0.4, label = 'Hamming', zorder = 3)
 #
 # plt.xticks(X_axis, X)
 # plt.xlabel("Głebokość")
@@ -535,14 +545,15 @@ for i in range(7):
 # 11
 # X = ['1', '2', '3', '4', '5', '6', '7']
 # X_axis = np.arange(len(X))
-# plt.bar(X_axis - 0.4, sol_len_bfs_rdul, 0.1, label = 'RDUL')
-# plt.bar(X_axis - 0.3, sol_len_bfs_rdlu, 0.1, label = 'RDLU')
-# plt.bar(X_axis - 0.2, sol_len_bfs_drul, 0.1, label = 'DRUL')
-# plt.bar(X_axis - 0.1, sol_len_bfs_drlu, 0.1, label = 'DRLU')
-# plt.bar(X_axis      , sol_len_bfs_ludr, 0.1, label = 'LUDR')
-# plt.bar(X_axis + 0.1, sol_len_bfs_lurd, 0.1, label = 'LURD')
-# plt.bar(X_axis + 0.2, sol_len_bfs_uldr, 0.1, label = 'ULDR')
-# plt.bar(X_axis + 0.3, sol_len_bfs_ulrd, 0.1, label = 'ULRD')
+# plt.grid(True, 'both', 'y', zorder = 0)
+# plt.bar(X_axis - 0.4, sol_len_bfs_rdul, 0.1, label = 'RDUL', zorder = 3)
+# plt.bar(X_axis - 0.3, sol_len_bfs_rdlu, 0.1, label = 'RDLU', zorder = 3)
+# plt.bar(X_axis - 0.2, sol_len_bfs_drul, 0.1, label = 'DRUL', zorder = 3)
+# plt.bar(X_axis - 0.1, sol_len_bfs_drlu, 0.1, label = 'DRLU', zorder = 3)
+# plt.bar(X_axis      , sol_len_bfs_ludr, 0.1, label = 'LUDR', zorder = 3)
+# plt.bar(X_axis + 0.1, sol_len_bfs_lurd, 0.1, label = 'LURD', zorder = 3)
+# plt.bar(X_axis + 0.2, sol_len_bfs_uldr, 0.1, label = 'ULDR', zorder = 3)
+# plt.bar(X_axis + 0.3, sol_len_bfs_ulrd, 0.1, label = 'ULRD', zorder = 3)
 #
 # plt.xticks(X_axis, X)
 # plt.xlabel("Głebokość")
@@ -554,14 +565,15 @@ for i in range(7):
 # 12
 # X = ['1', '2', '3', '4', '5', '6', '7']
 # X_axis = np.arange(len(X))
-# plt.bar(X_axis - 0.4, visited_count_bfs_rdul, 0.1, label = 'RDUL')
-# plt.bar(X_axis - 0.3, visited_count_bfs_rdlu, 0.1, label = 'RDLU')
-# plt.bar(X_axis - 0.2, visited_count_bfs_drul, 0.1, label = 'DRUL')
-# plt.bar(X_axis - 0.1, visited_count_bfs_drlu, 0.1, label = 'DRLU')
-# plt.bar(X_axis      , visited_count_bfs_ludr, 0.1, label = 'LUDR')
-# plt.bar(X_axis + 0.1, visited_count_bfs_lurd, 0.1, label = 'LURD')
-# plt.bar(X_axis + 0.2, visited_count_bfs_uldr, 0.1, label = 'ULDR')
-# plt.bar(X_axis + 0.3, visited_count_bfs_ulrd, 0.1, label = 'ULRD')
+# plt.grid(True, 'both', 'y', zorder = 0)
+# plt.bar(X_axis - 0.4, visited_count_bfs_rdul, 0.1, label = 'RDUL', zorder = 3)
+# plt.bar(X_axis - 0.3, visited_count_bfs_rdlu, 0.1, label = 'RDLU', zorder = 3)
+# plt.bar(X_axis - 0.2, visited_count_bfs_drul, 0.1, label = 'DRUL', zorder = 3)
+# plt.bar(X_axis - 0.1, visited_count_bfs_drlu, 0.1, label = 'DRLU', zorder = 3)
+# plt.bar(X_axis      , visited_count_bfs_ludr, 0.1, label = 'LUDR', zorder = 3)
+# plt.bar(X_axis + 0.1, visited_count_bfs_lurd, 0.1, label = 'LURD', zorder = 3)
+# plt.bar(X_axis + 0.2, visited_count_bfs_uldr, 0.1, label = 'ULDR', zorder = 3)
+# plt.bar(X_axis + 0.3, visited_count_bfs_ulrd, 0.1, label = 'ULRD', zorder = 3)
 #
 # plt.xticks(X_axis, X)
 # plt.xlabel("Głebokość")
@@ -575,14 +587,15 @@ for i in range(7):
 # 13
 # X = ['1', '2', '3', '4', '5', '6', '7']
 # X_axis = np.arange(len(X))
-# plt.bar(X_axis - 0.4, processed_count_bfs_rdul, 0.1, label = 'RDUL')
-# plt.bar(X_axis - 0.3, processed_count_bfs_rdlu, 0.1, label = 'RDLU')
-# plt.bar(X_axis - 0.2, processed_count_bfs_drul, 0.1, label = 'DRUL')
-# plt.bar(X_axis - 0.1, processed_count_bfs_drlu, 0.1, label = 'DRLU')
-# plt.bar(X_axis      , processed_count_bfs_ludr, 0.1, label = 'LUDR')
-# plt.bar(X_axis + 0.1, processed_count_bfs_lurd, 0.1, label = 'LURD')
-# plt.bar(X_axis + 0.2, processed_count_bfs_uldr, 0.1, label = 'ULDR')
-# plt.bar(X_axis + 0.3, processed_count_bfs_ulrd, 0.1, label = 'ULRD')
+# plt.grid(True, 'both', 'y', zorder = 0)
+# plt.bar(X_axis - 0.4, processed_count_bfs_rdul, 0.1, label = 'RDUL', zorder = 3)
+# plt.bar(X_axis - 0.3, processed_count_bfs_rdlu, 0.1, label = 'RDLU', zorder = 3)
+# plt.bar(X_axis - 0.2, processed_count_bfs_drul, 0.1, label = 'DRUL', zorder = 3)
+# plt.bar(X_axis - 0.1, processed_count_bfs_drlu, 0.1, label = 'DRLU', zorder = 3)
+# plt.bar(X_axis      , processed_count_bfs_ludr, 0.1, label = 'LUDR', zorder = 3)
+# plt.bar(X_axis + 0.1, processed_count_bfs_lurd, 0.1, label = 'LURD', zorder = 3)
+# plt.bar(X_axis + 0.2, processed_count_bfs_uldr, 0.1, label = 'ULDR', zorder = 3)
+# plt.bar(X_axis + 0.3, processed_count_bfs_ulrd, 0.1, label = 'ULRD', zorder = 3)
 #
 # plt.xticks(X_axis, X)
 # plt.xlabel("Głebokość")
@@ -595,14 +608,15 @@ for i in range(7):
 # 14
 # X = ['1', '2', '3', '4', '5', '6', '7']
 # X_axis = np.arange(len(X))
-# plt.bar(X_axis - 0.4, depth_avr_bfs_rdul, 0.1, label = 'RDUL')
-# plt.bar(X_axis - 0.3, depth_avr_bfs_rdlu, 0.1, label = 'RDLU')
-# plt.bar(X_axis - 0.2, depth_avr_bfs_drul, 0.1, label = 'DRUL')
-# plt.bar(X_axis - 0.1, depth_avr_bfs_drlu, 0.1, label = 'DRLU')
-# plt.bar(X_axis      , depth_avr_bfs_ludr, 0.1, label = 'LUDR')
-# plt.bar(X_axis + 0.1, depth_avr_bfs_lurd, 0.1, label = 'LURD')
-# plt.bar(X_axis + 0.2, depth_avr_bfs_uldr, 0.1, label = 'ULDR')
-# plt.bar(X_axis + 0.3, depth_avr_bfs_ulrd, 0.1, label = 'ULRD')
+# plt.grid(True, 'both', 'y', zorder = 0)
+# plt.bar(X_axis - 0.4, depth_avr_bfs_rdul, 0.1, label = 'RDUL', zorder = 3)
+# plt.bar(X_axis - 0.3, depth_avr_bfs_rdlu, 0.1, label = 'RDLU', zorder = 3)
+# plt.bar(X_axis - 0.2, depth_avr_bfs_drul, 0.1, label = 'DRUL', zorder = 3)
+# plt.bar(X_axis - 0.1, depth_avr_bfs_drlu, 0.1, label = 'DRLU', zorder = 3)
+# plt.bar(X_axis      , depth_avr_bfs_ludr, 0.1, label = 'LUDR', zorder = 3)
+# plt.bar(X_axis + 0.1, depth_avr_bfs_lurd, 0.1, label = 'LURD', zorder = 3)
+# plt.bar(X_axis + 0.2, depth_avr_bfs_uldr, 0.1, label = 'ULDR', zorder = 3)
+# plt.bar(X_axis + 0.3, depth_avr_bfs_ulrd, 0.1, label = 'ULRD', zorder = 3)
 #
 # plt.xticks(X_axis, X)
 # plt.xlabel("Głebokość")
@@ -614,14 +628,15 @@ for i in range(7):
 # 15
 # X = ['1', '2', '3', '4', '5', '6', '7']
 # X_axis = np.arange(len(X))
-# plt.bar(X_axis - 0.4, time_avg_bfs_rdul, 0.1, label = 'RDUL')
-# plt.bar(X_axis - 0.3, time_avg_bfs_rdlu, 0.1, label = 'RDLU')
-# plt.bar(X_axis - 0.2, time_avg_bfs_drul, 0.1, label = 'DRUL')
-# plt.bar(X_axis - 0.1, time_avg_bfs_drlu, 0.1, label = 'DRLU')
-# plt.bar(X_axis      , time_avg_bfs_ludr, 0.1, label = 'LUDR')
-# plt.bar(X_axis + 0.1, time_avg_bfs_lurd, 0.1, label = 'LURD')
-# plt.bar(X_axis + 0.2, time_avg_bfs_uldr, 0.1, label = 'ULDR')
-# plt.bar(X_axis + 0.3, time_avg_bfs_ulrd, 0.1, label = 'ULRD')
+# plt.grid(True, 'both', 'y', zorder = 0)
+# plt.bar(X_axis - 0.4, time_avg_bfs_rdul, 0.1, label = 'RDUL', zorder = 3)
+# plt.bar(X_axis - 0.3, time_avg_bfs_rdlu, 0.1, label = 'RDLU', zorder = 3)
+# plt.bar(X_axis - 0.2, time_avg_bfs_drul, 0.1, label = 'DRUL', zorder = 3)
+# plt.bar(X_axis - 0.1, time_avg_bfs_drlu, 0.1, label = 'DRLU', zorder = 3)
+# plt.bar(X_axis      , time_avg_bfs_ludr, 0.1, label = 'LUDR', zorder = 3)
+# plt.bar(X_axis + 0.1, time_avg_bfs_lurd, 0.1, label = 'LURD', zorder = 3)
+# plt.bar(X_axis + 0.2, time_avg_bfs_uldr, 0.1, label = 'ULDR', zorder = 3)
+# plt.bar(X_axis + 0.3, time_avg_bfs_ulrd, 0.1, label = 'ULRD', zorder = 3)
 #
 # plt.xticks(X_axis, X)
 # plt.xlabel("Głebokość")
@@ -635,14 +650,15 @@ for i in range(7):
 # 16
 # X = ['1', '2', '3', '4', '5', '6', '7']
 # X_axis = np.arange(len(X))
-# plt.bar(X_axis - 0.4, sol_len_dfs_rdul, 0.1, label = 'RDUL')
-# plt.bar(X_axis - 0.3, sol_len_dfs_rdlu, 0.1, label = 'RDLU')
-# plt.bar(X_axis - 0.2, sol_len_dfs_drul, 0.1, label = 'DRUL')
-# plt.bar(X_axis - 0.1, sol_len_dfs_drlu, 0.1, label = 'DRLU')
-# plt.bar(X_axis      , sol_len_dfs_ludr, 0.1, label = 'LUDR')
-# plt.bar(X_axis + 0.1, sol_len_dfs_lurd, 0.1, label = 'LURD')
-# plt.bar(X_axis + 0.2, sol_len_dfs_uldr, 0.1, label = 'ULDR')
-# plt.bar(X_axis + 0.3, sol_len_dfs_ulrd, 0.1, label = 'ULRD')
+# plt.grid(True, 'both', 'y', zorder = 0)
+# plt.bar(X_axis - 0.4, sol_len_dfs_rdul, 0.1, label = 'RDUL', zorder = 3)
+# plt.bar(X_axis - 0.3, sol_len_dfs_rdlu, 0.1, label = 'RDLU', zorder = 3)
+# plt.bar(X_axis - 0.2, sol_len_dfs_drul, 0.1, label = 'DRUL', zorder = 3)
+# plt.bar(X_axis - 0.1, sol_len_dfs_drlu, 0.1, label = 'DRLU', zorder = 3)
+# plt.bar(X_axis      , sol_len_dfs_ludr, 0.1, label = 'LUDR', zorder = 3)
+# plt.bar(X_axis + 0.1, sol_len_dfs_lurd, 0.1, label = 'LURD', zorder = 3)
+# plt.bar(X_axis + 0.2, sol_len_dfs_uldr, 0.1, label = 'ULDR', zorder = 3)
+# plt.bar(X_axis + 0.3, sol_len_dfs_ulrd, 0.1, label = 'ULRD', zorder = 3)
 #
 # plt.xticks(X_axis, X)
 # plt.xlabel("Głebokość")
@@ -654,14 +670,15 @@ for i in range(7):
 # 17
 # X = ['1', '2', '3', '4', '5', '6', '7']
 # X_axis = np.arange(len(X))
-# plt.bar(X_axis - 0.4, visited_count_dfs_rdul, 0.1, label = 'RDUL')
-# plt.bar(X_axis - 0.3, visited_count_dfs_rdlu, 0.1, label = 'RDLU')
-# plt.bar(X_axis - 0.2, visited_count_dfs_drul, 0.1, label = 'DRUL')
-# plt.bar(X_axis - 0.1, visited_count_dfs_drlu, 0.1, label = 'DRLU')
-# plt.bar(X_axis      , visited_count_dfs_ludr, 0.1, label = 'LUDR')
-# plt.bar(X_axis + 0.1, visited_count_dfs_lurd, 0.1, label = 'LURD')
-# plt.bar(X_axis + 0.2, visited_count_dfs_uldr, 0.1, label = 'ULDR')
-# plt.bar(X_axis + 0.3, visited_count_dfs_ulrd, 0.1, label = 'ULRD')
+# plt.grid(True, 'both', 'y', zorder = 0)
+# plt.bar(X_axis - 0.4, visited_count_dfs_rdul, 0.1, label = 'RDUL', zorder = 3)
+# plt.bar(X_axis - 0.3, visited_count_dfs_rdlu, 0.1, label = 'RDLU', zorder = 3)
+# plt.bar(X_axis - 0.2, visited_count_dfs_drul, 0.1, label = 'DRUL', zorder = 3)
+# plt.bar(X_axis - 0.1, visited_count_dfs_drlu, 0.1, label = 'DRLU', zorder = 3)
+# plt.bar(X_axis      , visited_count_dfs_ludr, 0.1, label = 'LUDR', zorder = 3)
+# plt.bar(X_axis + 0.1, visited_count_dfs_lurd, 0.1, label = 'LURD', zorder = 3)
+# plt.bar(X_axis + 0.2, visited_count_dfs_uldr, 0.1, label = 'ULDR', zorder = 3)
+# plt.bar(X_axis + 0.3, visited_count_dfs_ulrd, 0.1, label = 'ULRD', zorder = 3)
 #
 # plt.xticks(X_axis, X)
 # plt.xlabel("Głebokość")
@@ -674,14 +691,15 @@ for i in range(7):
 # 18
 # X = ['1', '2', '3', '4', '5', '6', '7']
 # X_axis = np.arange(len(X))
-# plt.bar(X_axis - 0.4, processed_count_dfs_rdul, 0.1, label = 'RDUL')
-# plt.bar(X_axis - 0.3, processed_count_dfs_rdlu, 0.1, label = 'RDLU')
-# plt.bar(X_axis - 0.2, processed_count_dfs_drul, 0.1, label = 'DRUL')
-# plt.bar(X_axis - 0.1, processed_count_dfs_drlu, 0.1, label = 'DRLU')
-# plt.bar(X_axis      , processed_count_dfs_ludr, 0.1, label = 'LUDR')
-# plt.bar(X_axis + 0.1, processed_count_dfs_lurd, 0.1, label = 'LURD')
-# plt.bar(X_axis + 0.2, processed_count_dfs_uldr, 0.1, label = 'ULDR')
-# plt.bar(X_axis + 0.3, processed_count_dfs_ulrd, 0.1, label = 'ULRD')
+# plt.grid(True, 'both', 'y', zorder = 0)
+# plt.bar(X_axis - 0.4, processed_count_dfs_rdul, 0.1, label = 'RDUL', zorder = 3)
+# plt.bar(X_axis - 0.3, processed_count_dfs_rdlu, 0.1, label = 'RDLU', zorder = 3)
+# plt.bar(X_axis - 0.2, processed_count_dfs_drul, 0.1, label = 'DRUL', zorder = 3)
+# plt.bar(X_axis - 0.1, processed_count_dfs_drlu, 0.1, label = 'DRLU', zorder = 3)
+# plt.bar(X_axis      , processed_count_dfs_ludr, 0.1, label = 'LUDR', zorder = 3)
+# plt.bar(X_axis + 0.1, processed_count_dfs_lurd, 0.1, label = 'LURD', zorder = 3)
+# plt.bar(X_axis + 0.2, processed_count_dfs_uldr, 0.1, label = 'ULDR', zorder = 3)
+# plt.bar(X_axis + 0.3, processed_count_dfs_ulrd, 0.1, label = 'ULRD', zorder = 3)
 #
 # plt.xticks(X_axis, X)
 # plt.xlabel("Głebokość")
@@ -694,14 +712,15 @@ for i in range(7):
 # 19
 # X = ['1', '2', '3', '4', '5', '6', '7']
 # X_axis = np.arange(len(X))
-# plt.bar(X_axis - 0.4, depth_avr_dfs_rdul, 0.1, label = 'RDUL')
-# plt.bar(X_axis - 0.3, depth_avr_dfs_rdlu, 0.1, label = 'RDLU')
-# plt.bar(X_axis - 0.2, depth_avr_dfs_drul, 0.1, label = 'DRUL')
-# plt.bar(X_axis - 0.1, depth_avr_dfs_drlu, 0.1, label = 'DRLU')
-# plt.bar(X_axis      , depth_avr_dfs_ludr, 0.1, label = 'LUDR')
-# plt.bar(X_axis + 0.1, depth_avr_dfs_lurd, 0.1, label = 'LURD')
-# plt.bar(X_axis + 0.2, depth_avr_dfs_uldr, 0.1, label = 'ULDR')
-# plt.bar(X_axis + 0.3, depth_avr_dfs_ulrd, 0.1, label = 'ULRD')
+# plt.grid(True, 'both', 'y', zorder = 0)
+# plt.bar(X_axis - 0.4, depth_avr_dfs_rdul, 0.1, label = 'RDUL', zorder = 3)
+# plt.bar(X_axis - 0.3, depth_avr_dfs_rdlu, 0.1, label = 'RDLU', zorder = 3)
+# plt.bar(X_axis - 0.2, depth_avr_dfs_drul, 0.1, label = 'DRUL', zorder = 3)
+# plt.bar(X_axis - 0.1, depth_avr_dfs_drlu, 0.1, label = 'DRLU', zorder = 3)
+# plt.bar(X_axis      , depth_avr_dfs_ludr, 0.1, label = 'LUDR', zorder = 3)
+# plt.bar(X_axis + 0.1, depth_avr_dfs_lurd, 0.1, label = 'LURD', zorder = 3)
+# plt.bar(X_axis + 0.2, depth_avr_dfs_uldr, 0.1, label = 'ULDR', zorder = 3)
+# plt.bar(X_axis + 0.3, depth_avr_dfs_ulrd, 0.1, label = 'ULRD', zorder = 3)
 #
 # plt.xticks(X_axis, X)
 # plt.xlabel("Głebokość")
@@ -713,14 +732,15 @@ for i in range(7):
 # 20
 X = ['1', '2', '3', '4', '5', '6', '7']
 X_axis = np.arange(len(X))
-plt.bar(X_axis - 0.4, time_avg_dfs_rdul, 0.1, label='RDUL')
-plt.bar(X_axis - 0.3, time_avg_dfs_rdlu, 0.1, label='RDLU')
-plt.bar(X_axis - 0.2, time_avg_dfs_drul, 0.1, label='DRUL')
-plt.bar(X_axis - 0.1, time_avg_dfs_drlu, 0.1, label='DRLU')
-plt.bar(X_axis, time_avg_dfs_ludr, 0.1, label='LUDR')
-plt.bar(X_axis + 0.1, time_avg_dfs_lurd, 0.1, label='LURD')
-plt.bar(X_axis + 0.2, time_avg_dfs_uldr, 0.1, label='ULDR')
-plt.bar(X_axis + 0.3, time_avg_dfs_ulrd, 0.1, label='ULRD')
+plt.grid(True, 'both', 'y', zorder = 0)
+plt.bar(X_axis - 0.4, time_avg_dfs_rdul, 0.1, label='RDUL', zorder = 3)
+plt.bar(X_axis - 0.3, time_avg_dfs_rdlu, 0.1, label='RDLU', zorder = 3)
+plt.bar(X_axis - 0.2, time_avg_dfs_drul, 0.1, label='DRUL', zorder = 3)
+plt.bar(X_axis - 0.1, time_avg_dfs_drlu, 0.1, label='DRLU', zorder = 3)
+plt.bar(X_axis, time_avg_dfs_ludr, 0.1, label='LUDR', zorder = 3)
+plt.bar(X_axis + 0.1, time_avg_dfs_lurd, 0.1, label='LURD', zorder = 3)
+plt.bar(X_axis + 0.2, time_avg_dfs_uldr, 0.1, label='ULDR', zorder = 3)
+plt.bar(X_axis + 0.3, time_avg_dfs_ulrd, 0.1, label='ULRD', zorder = 3)
 
 plt.xticks(X_axis, X)
 plt.xlabel("Głebokość")
