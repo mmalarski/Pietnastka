@@ -4,7 +4,6 @@ import time as t
 import os
 import sys
 
-
 DEPTH = 20
 TARGET_STATE = []
 
@@ -89,17 +88,20 @@ def blind_algorithms(order, variant, init_state, t_state):
             if len(step.all_moves) > max_depth:
                 max_depth = len(step.all_moves)
             if step.board == t_state:
+                # stan odwiedzone - kiedykolwiek byly na openliscie
                 return str(len(list_to_string(step.all_moves))), list_to_string(step.all_moves), len(open_list), len(
                     closed_list), max_depth, t.time() - start_time
             closed_list[step.board_string] = step.all_moves
             if variant == "dfs" and len(step.all_moves) == DEPTH:
                 continue
-            for direction in reversed(get_possible_directions(step.board, order)):
+            for direction in reversed(get_possible_directions(step.board, order)): # reversed order depending on method
                 child = deepcopy(step)
                 child = child.move_step(direction, step.board, find_zero(step.board)[0], find_zero(step.board)[1])
+                #is target state return
                 if closed_list.get(child.board_string) is None:
                     open_list.append(child)
                 elif len(closed_list.get(child.board_string)) > len(child.all_moves):
+                    # optimalisation for each method all moves
                     open_list.append(child)
                     closed_list.pop(child.board_string)
     return str(-1), list_to_string(step.all_moves), len(open_list), len(closed_list), max_depth, t.time() - start_time
@@ -109,6 +111,7 @@ def a_star(variant, init_state, t_state):
     global TARGET_STATE
     TARGET_STATE = t_state
     step = Step(None, None, [], init_state)
+    # check if init state isnt target
     open_list = [step]
     closed_list = set()
     closed_list.add(step)
@@ -128,6 +131,7 @@ def a_star(variant, init_state, t_state):
             return str(len(list_to_string(step.all_moves))), list_to_string(step.all_moves), len(open_list), len(
                 closed_list), max_depth, t.time() - start_time
         for direction in get_possible_directions(step.board, "LURD"):
+            # check if is target
             child = deepcopy(step)
             child = child.move_step(direction, step.board, find_zero(step.board)[0], find_zero(step.board)[1])
             if child.board not in [b.board for b in closed_list]:
@@ -161,6 +165,7 @@ def sq_list_to_string(s):
 
 
 def how_many_in_pos(board):
+    # ignore 0
     count = 0
     k = 0
     l = 0
@@ -294,3 +299,18 @@ if __name__ == '__main__':
         statistics_file.close()
     else:
         print("Podaj poprawna ilosc argumentow (5)")
+    #
+    # INITIAL_STATE = [
+    #     [0, 2, 3, 4],
+    #     [1, 5, 6, 8],
+    #     [9, 10, 7, 12],
+    #     [13, 14, 11, 15]
+    # ]
+    # TARGET_STATE = [
+    #     [1, 2, 3, 4],
+    #     [5, 6, 7, 8],
+    #     [9, 10, 11, 12],
+    #     [13, 14, 15, 0]
+    # ]
+    #
+    # print(a_star("manh", INITIAL_STATE, TARGET_STATE))
