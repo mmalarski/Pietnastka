@@ -155,8 +155,8 @@ def blind_algorithms(order, variant, init_state, t_state):
                 max_depth = len(step.all_moves)
             if step.board == t_state:
                 # stan odwiedzone - kiedykolwiek byly na openliscie
-                return str(len(list_to_string(step.all_moves))), list_to_string(step.all_moves), len(open_list), len(
-                    closed_list), max_depth, t.time() - start_time
+                return str(len(list_to_string(step.all_moves))), list_to_string(step.all_moves), len(closed_list) + \
+                       len(open_list), len(closed_list), max_depth, t.time() - start_time
             closed_list[step.board_string] = step.all_moves
             if variant == "dfs" and len(step.all_moves) == DEPTH:
                 continue
@@ -170,7 +170,44 @@ def blind_algorithms(order, variant, init_state, t_state):
                     # optimalisation for each method all moves
                     open_list.append(child)
                     closed_list.pop(child.board_string)
-    return str(-1), list_to_string(step.all_moves), len(open_list), len(closed_list), max_depth, t.time() - start_time
+    return str(-1), list_to_string(step.all_moves), len(closed_list) + len(open_list), len(closed_list), max_depth, t.time() - start_time
+
+
+def blind_algorithms(order, variant, init_state, t_state):
+    step = Step(None, None, [], init_state)
+    open_list = [step]
+    closed_list = {}
+    max_depth = 0
+    start_time = t.time()
+    while open_list:
+        if variant == "dfs":
+            step = open_list.pop()
+        elif variant == "bfs":
+            step = open_list.pop(0)
+        else:
+            return "Wrong variant"
+
+        if closed_list.get(step.board_string) is None:
+            if len(step.all_moves) > max_depth:
+                max_depth = len(step.all_moves)
+            if step.board == t_state:
+                # stan odwiedzone - kiedykolwiek byly na openliscie
+                return str(len(list_to_string(step.all_moves))), list_to_string(step.all_moves), len(closed_list) + \
+                       len(open_list), len(closed_list), max_depth, t.time() - start_time
+            closed_list[step.board_string] = step.all_moves
+            if variant == "dfs" and len(step.all_moves) == DEPTH:
+                continue
+            for direction in reversed(get_possible_directions(step.board, order)): # reversed order depending on method
+                child = deepcopy(step)
+                child = child.move_step(direction, step.board, find_zero(step.board)[0], find_zero(step.board)[1])
+                #is target state return
+                if closed_list.get(child.board_string) is None:
+                    open_list.append(child)
+                elif len(closed_list.get(child.board_string)) > len(child.all_moves):
+                    # optimalisation for each method all moves
+                    open_list.append(child)
+                    closed_list.pop(child.board_string)
+    return str(-1), list_to_string(step.all_moves), len(closed_list) + len(open_list), len(closed_list), max_depth, t.time() - start_time
 
 
 def a_star(variant, init_state, t_state):
@@ -337,8 +374,12 @@ if __name__ == '__main__':
             if sys.argv[2] not in ["RDUL", "RDLU", "DRUL", "DRUL", "DRLU", "LUDR", "LURD", "ULDR", "ULRD"]:
                 print("Podaj odpowiedni porzadek przeszukiwania (ORDER)")
             else:
-                length, solution, ol_size, cl_size, depth, time = blind_algorithms(sys.argv[2], sys.argv[1],
-                                                                                   initial_state, target_state)
+                if sys.argv[1] == "bfs":
+                    length, solution, ol_size, cl_size, depth, time = bfs(sys.argv[2], sys.argv[1], initial_state,
+                                                                          target_state)
+                elif sys.argv[1] == "dfs":
+                    length, solution, ol_size, cl_size, depth, time = dfs(sys.argv[2], sys.argv[1], initial_state,
+                                                                          target_state)
                 solution_file.writelines([length, '\n', solution]) if length != "-1" else solution_file.writelines(
                     [length])
                 statistics_file.write(length)

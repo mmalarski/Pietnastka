@@ -280,7 +280,6 @@ for whatever in Lines:
         time_avg_astr[index] += line[8]
         if line[3] == "hamm":
             sol_len_hamm[index] += line[4]
-            print(line[4])
             visited_count_hamm[index] += line[5]
             processed_count_hamm[index] += line[6]
             depth_avr_hamm[index] += line[7]
