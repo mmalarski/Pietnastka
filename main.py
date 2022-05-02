@@ -70,6 +70,72 @@ class Step:
         return new_step
 
 
+def bfs(order, variant, init_state, t_state):
+    step = Step(None, None, [], init_state)
+    open_list = [step]
+    closed_list = {}
+    max_depth = 0
+    start_time = t.time()
+    while open_list:
+        step = open_list.pop(0)
+        if closed_list.get(step.board_string) is None:
+            if len(step.all_moves) > max_depth:
+                max_depth = len(step.all_moves)
+            if step.board == t_state:
+                # stan odwiedzone - kiedykolwiek byly na openliscie
+                return str(len(list_to_string(step.all_moves))), list_to_string(step.all_moves), len(open_list) + len(
+                    closed_list), len(closed_list), max_depth, t.time() - start_time
+            closed_list[step.board_string] = step.all_moves
+            for direction in get_possible_directions(step.board, order):
+                child = deepcopy(step)
+                child = child.move_step(direction, step.board, find_zero(step.board)[0], find_zero(step.board)[1])
+                if child.board == t_state:
+                    # stan odwiedzone - kiedykolwiek byly na openliscie
+                    return str(len(list_to_string(child.all_moves))), list_to_string(child.all_moves), len(open_list) \
+                           + len(closed_list), len(closed_list), max_depth, t.time() - start_time
+                if closed_list.get(child.board_string) is None:
+                    open_list.append(child)
+                elif len(closed_list.get(child.board_string)) > len(child.all_moves):
+                    # optimalisation for each method all moves
+                    open_list.append(child)
+                    closed_list.pop(child.board_string)
+    return str(-1), list_to_string(step.all_moves), len(open_list), len(closed_list), max_depth, t.time() - start_time
+
+
+def dfs(order, variant, init_state, t_state):
+    step = Step(None, None, [], init_state)
+    open_list = [step]
+    closed_list = {}
+    max_depth = 0
+    start_time = t.time()
+    while open_list:
+        step = open_list.pop()
+        if closed_list.get(step.board_string) is None:
+            if len(step.all_moves) > max_depth:
+                max_depth = len(step.all_moves)
+            if step.board == t_state:
+                # stan odwiedzone - kiedykolwiek byly na openliscie
+                return str(len(list_to_string(step.all_moves))), list_to_string(step.all_moves), len(open_list), len(
+                    closed_list), max_depth, t.time() - start_time
+            closed_list[step.board_string] = step.all_moves
+            if len(step.all_moves) == DEPTH:
+                continue
+            for direction in reversed(get_possible_directions(step.board, order)):
+                child = deepcopy(step)
+                child = child.move_step(direction, step.board, find_zero(step.board)[0], find_zero(step.board)[1])
+                if child.board == t_state:
+                    # stan odwiedzone - kiedykolwiek byly na openliscie
+                    return str(len(list_to_string(child.all_moves))), list_to_string(child.all_moves), len(open_list) \
+                           + len(closed_list), len(closed_list), max_depth, t.time() - start_time
+                if closed_list.get(child.board_string) is None:
+                    open_list.append(child)
+                elif len(closed_list.get(child.board_string)) > len(child.all_moves):
+                    # optimalisation for each method all moves
+                    open_list.append(child)
+                    closed_list.pop(child.board_string)
+    return str(-1), list_to_string(step.all_moves), len(open_list), len(closed_list), max_depth, t.time() - start_time
+
+
 def blind_algorithms(order, variant, init_state, t_state):
     step = Step(None, None, [], init_state)
     open_list = [step]
@@ -171,7 +237,7 @@ def how_many_in_pos(board):
     l = 0
     for i in board:
         for j in i:
-            if j == TARGET_STATE[k][l]:
+            if j == TARGET_STATE[k][l] and TARGET_STATE[k][l] != 0:
                 count = count + 1
             l = l + 1
         l = 0
